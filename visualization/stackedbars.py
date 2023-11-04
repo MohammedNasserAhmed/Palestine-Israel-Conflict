@@ -1,8 +1,18 @@
+import logging
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure, output_file
 from bokeh.io import curdoc, show
 from bokeh.palettes import  Cividis256
 import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.patheffects as pe
+import matplotlib.patches as patches
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+from typing import List, Tuple
+from pydantic import BaseModel, Field, validator
+
+
 class StackBar:
     def __init__(self, data, variable : str):
         """
@@ -204,10 +214,412 @@ class StackBar:
         
 
 
+class vbar:
+    def __init__(self, df, var, title=None, y_label='Count', y_rotate=360, figwidth=15, 
+                 figheight=6, colors=None, legend_labels=None):
+        """
+        Initialize the class instance.
+
+        Parameters:
+        - df: pandas DataFrame
+            The dataframe containing the data.
+        - var: str
+            The variable to be plotted.
+        - title: str, optional
+            The title of the plot.
+        - y_label: str, optional
+            The label for the y-axis.
+        - y_rotate: int, optional
+            The rotation angle for the y-axis labels.
+        - figwidth: int, optional
+            The width of the figure.
+        - figheight: int, optional
+            The height of the figure.
+        - colors: list, optional
+            The colors to be used for the plot.
+        - legend_labels: list, optional
+            The labels for the plot legend.
+
+        Raises:
+        - TypeError: If df is not a pandas DataFrame or var is not a string.
+        """
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError("df must be a pandas DataFrame")
+        if not isinstance(var, str):
+            raise TypeError("var must be a string")
+    
+        self.df = df.copy()
+        self.var = var
+        self.title = title
+        self.y_label = y_label
+        self.y_rotate = y_rotate
+        self.figwidth = figwidth
+        self.figheight = figheight
+        self.colors = colors or ["#113946","#BCA37F","#001524"]
+        self.labels = legend_labels or ["Greater than Average","Less than or equal to Average"]
+        
+
+    def validate(self):
+        if not (4 < self.figheight < 8):
+            raise ValueError("figsize height must be greater than 4 inch and less than 7 inch")
+        if not (13 < self.figwidth < 16):
+            raise ValueError("figsize width must be greater than 9 inch and less than 13 inch")
+
+    def plot(self):
+        self.validate()
+        counts = self.df.groupby(self.var)[self.y_label].sum().sort_index(ascending=True)
+        average = counts.mean()
+        fsize = self.figwidth
+        fig = self.create_figure()
+        ax = counts.plot(kind='bar', color=self.colors[:2], alpha=0.9, 
+                    width=0.5, edgecolor='w', linewidth=0.5, 
+                    align='center')
+        self.set_labels(ax, average, fsize)
+        self.annotate_bars(ax, counts, fsize)
+        self.create_legend(ax)
+        self.add_arrows(fig, fsize)
+        self.save_and_show_figure(fig,fsize)
+
+    def create_figure(self):
+        fig = plt.figure(figsize=(self.figwidth, self.figheight), layout="constrained")
+        return fig
+
+    def set_labels(self, ax, average, fsize):
+        for spine in ax.spines.values():
+            spine.set_linewidth(0)
+        ax.set_ylabel(self.y_label, fontsize=fsize, rotation=self.y_rotate, labelpad=30, color=self.colors[2])
+        ax.set_xlabel(self.var, fontsize=fsize, rotation=360, labelpad=30, color=self.colors[2])
+        ax.tick_params(axis='x', colors='#414A4C', rotation=45, length=3, width=3, labelsize=fsize-4)
+        ax.tick_params(axis='y', colors='#414A4C', rotation=45, length=3, width=3, labelsize=fsize-4)
+        ax.annotate(f"Average of {self.y_label} yearly : {int(average)}", 
+                    xy=(0.29, 0.9), xycoords='figure fraction', 
+                    color='#CD5C08', fontweight='bold', fontsize=fsize-2, 
+                    verticalalignment='top')
+
+    def annotate_bars(self, ax, counts, fsize):
+        for i, v in enumerate(counts):
+            ax.text(i, v, str(v), ha='center', va='bottom',
+                    fontsize=fsize-7,fontweight='bold', 
+                    color="#113946") 
+
+    def create_legend(self, ax):
+        bc = self.colors
+        ax.scatter([], [], color=bc[0], marker='s')
+        ax.scatter([], [], color=bc[1], marker='s')
+        leg = ax.legend(self.labels,loc='upper right', fancybox=True, 
+                        ncol=1,labelspacing=1.5,
+                        framealpha=1, shadow=True, borderpad=1, 
+                        frameon=True, edgecolor='black', facecolor='#FFFAF0')
+        leg.get_frame().set_linewidth(0)
+
+    def add_arrows(self, fig, fsize):
+        fc = "#FFFAF0"
+        ec= "none"
+        txt = "     "
+        bbox_props = dict(boxstyle="rarrow", fc=fc, ec=ec, lw=1, 
+                          path_effects=[pe.withStroke(linewidth=2, foreground="gray")])
+        fig.text(0.3, 0.8, txt, ha="center", va="center", rotation=90,
+                 size=fsize-3,bbox=bbox_props)
+        fig.text(0.35, 0.8, txt, ha="center", va="center", rotation=90, 
+                 size=fsize-3,bbox=bbox_props)   
+        fig.text(0.4, 0.8, txt, ha="center", va="center", rotation=90, 
+                 size=fsize-3,bbox=bbox_props)
+        fig.text(0.45,0.8, txt, ha="center", va="center", rotation=90, 
+                 size=fsize-3,bbox=bbox_props)
+        fig.text(0.5,0.8, txt, ha="center", va="center", rotation=90, size=self.figwidth-3,bbox=bbox_props)
+
+    def save_and_show_figure(self, fig, fsize):
+        plt.title(self.title, fontsize=fsize+2, color=self.colors[2])
+        plt.savefig("yearbar.png")
+        fig.show()
+
+
+
+
+class CustomizedBar(BaseModel):
+    data: List[dict] = Field(..., description="Input data should be a dictionary")
+    title: str = Field(..., description="Title Input should be a string")
+    box_title: str = Field(..., description="Left Box title input must be a string")
+    gv: str = Field(..., description="The variable to group data should be in a string dtype")
+    cols: List[Tuple[str,str]] = Field(..., description="Columns should be a list of tuples")
+    img_lbls: List[Tuple[str,str]] = Field(..., description="Images labels should be a list with a single tuple")
+    lgd_lbls: List[Tuple[str,str]] = Field(..., description="Legend labels should be a list with a single tuple")
+    img_paths: List[str] = Field(..., description="Images paths should be a list of exactly four paths")
+    map_img: str = Field(..., description="Map Image path input must be a string")
+    signature: str = Field(..., description="Signature input must be a string")
+    
+    @validator('data')
+    def validate_dataframe(cls, data):
+        if not isinstance(data, list):
+            raise ValueError(f'Input data should be a list of dictionaries. Got {type(data).__name__} instead.')
+        return data
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "dataframe": [
+                    {"group_var": "A", "Column1": 1, "Column2": 6, "Column3": 7, "Column4": 12},
+                    {"group_var": "B", "Column1": 2, "Column2": 5, "Column3": 8, "Column4": 11},
+                    {"group_var": "C", "Column1": 3, "Column2": 4, "Column3": 9, "Column4": 10},
+                    {"group_var": "A", "Column1": 4, "Column2": 3, "Column3": 10, "Column4": 9},
+                    {"group_var": "B", "Column1": 5, "Column2": 2, "Column3": 11, "Column4": 8},
+                    {"group_var": "C", "Column1": 6, "Column2": 1, "Column3": 12, "Column4": 7}
+                ],
+                "title": "Title",
+                "box_title": "Box Title",
+                "group_var": "group_var",
+                "columns": [("Column1", "Column2"), ("Column3", "Column4")],
+                "img_lbls": [("Image Label1", "Image Label2")],
+                "legend_lbls": [("Legend Label1", "Legend Label2")],
+                "img_paths": ["path1", "path2", "path3", "path4"],
+                "map_img": "Map Image",
+                "signature": "Signature"
+            }
+        }
+    def clean_data(self):
+        """
+        Clean and preprocess the input data.
+
+        Returns:
+            float: The maximum value from the relevant columns.
+        """
+        self.data = pd.DataFrame(self.data)
+        self.data = self.data.groupby(self.gv).sum().reset_index()
+
+        relevant_columns = [element for tuple in self.cols for element in tuple]
+        self.data[relevant_columns] = self.data[relevant_columns].fillna(0)
+        max_value = self.data[relevant_columns].max().max()
+
+        return max_value
+
+    def compute_statistics(self):
+        """
+        Compute statistics based on the input data.
+
+        Returns:
+            Tuple: A tuple containing the grouped data and the total values for each column.
+        """
+        (v1, v2),(v3, v4) = self.cols
+        total1 = self.data[v1].sum()
+        total2 = self.data[v2].sum()
+        total3 = self.data[v3].sum()
+        total4 = self.data[v4].sum()
+        grouped = self.data[self.gv].unique().tolist()
+        return grouped, total1, total2, total3, total4
+
+    def create_plot(self):
+        """
+        Create a new plot for visualization.
+
+        Returns:
+            Tuple: A tuple containing the figure and axis objects.
+        """
+        plt.style.use('fivethirtyeight')
+        fig, ax = plt.subplots(figsize=(14, 12))
+        logging.info("Plot created")
+        return fig, ax
+
+    def draw_plot(self, ax, grouped, total1, total2, total3, total4, max_value):
+        """
+        Draw the customized bar plot.
+
+        Args:
+            ax: The axis object to draw the plot on.
+            grouped: The grouped data.
+            total1: The total value for column 1.
+            total2: The total value for column 2.
+            total3: The total value for column 3.
+            total4: The total value for column 4.
+            max_value: The maximum value from the relevant columns.
+        """
+        ax.set_xlim(0, max_value+(max_value//2))
+        ax.set_ylim(0, 100)
+        axx= max_value+(max_value//8)
+        axy= max_value+(max_value//5)
+        ax.axvline(x=axx,ymin=0, ymax=0.7885, color='#3D0C11', linestyle='-',linewidth=1)
+        ax.axvline(x=axy, ymin=0, ymax=0.7885,color='#3D0C11', linestyle='-', linewidth=1)
+        height = 2.5
+        y = 3
+        for _,val in enumerate(grouped):
+          fontsize = 10
+          #========== Palestinians Injuries============
+          v00 = self.data[self.data[self.gv]==val][self.cols[0][0]].values[0]
+
+          #========== Israelis Injuries============
+          v01 = self.data[self.data[self.gv]==val][self.cols[0][1]].values[0]
+
+          #========== Palestinians Injuries============
+          v10 = self.data[self.data[self.gv]==val][self.cols[1][0]].values[0]
+
+          #========== Israelis Killed============
+          v11 = self.data[self.data[self.gv]==val][self.cols[1][1]].values[0]
+
+          #========================= Palestinians =======================
+          if v00 == 0:
+            v00x=axx
+          else:
+            v00x = axx-v00
+          if v01 == 0:
+            v01x=axx
+          else:
+            v01x = axx-v01
+          if v00 > v01:
+            xmn = v00x
+          else :
+            xmn = v01x
+          if v00+v01 >10000:
+            ax.text(xmn-(0.068*axx), y+height/2, '{:,.0f}'.format(v00+v01), fontsize=fontsize, verticalalignment='center', color='black')
+          elif v00+v01 >1000:
+            ax.text(xmn-(0.057*axx), y+height/2, '{:,.0f}'.format(v00+v01), fontsize=fontsize, verticalalignment='center', color='black')
+          elif v00+v01 <100:
+            ax.text(xmn-(0.032*axx), y+height/2, '{:,.0f}'.format(v00+v01), fontsize=fontsize, verticalalignment='center', color='black')
+          else:
+            ax.text(xmn-(0.43*axx), y+height/2, '{:,.0f}'.format(v00+v01), fontsize=fontsize, verticalalignment='center', color='black')
+
+          width = axx-v00x
+          rect = patches.Rectangle((v00x-(0.005*axx), y), width, height, linewidth=1, edgecolor='#D80032', facecolor='#CD1818')
+          ax.add_patch(rect)
+          width = axx-v01x
+          rect = patches.Rectangle((v01x-(0.005*axx), y), width+(0.005*axx), height, linewidth=1, edgecolor='#3D0C11', facecolor='#3D0C11')
+          ax.add_patch(rect)
+          ax.text(axx+350, y+height/2, str(val), fontsize=12, verticalalignment='center', color='#7D7C7C')
+
+          #=================== iIsraelis ========================
+          if v10 == 0:
+            v10x=axy
+          else:
+            v10x = axy+v10
+          if v11 == 0:
+            v11x=axy
+          else:
+            v11x = axy+v11
+          if v10 > v11:
+            xmn = v10x
+          else :
+            xmn = v11x
+          if v10+v11 >10000:
+            ax.text(xmn+(0.01*axx), y+height/2, '{:,.0f}'.format(v10+v11), fontsize=fontsize, verticalalignment='center', color='black')
+          elif v10+v11 >1000:
+            ax.text(xmn+(0.01*axx), y+height/2, '{:,.0f}'.format(v10+v11), fontsize=fontsize, verticalalignment='center', color='black')
+          elif v10+v11 <100:
+            ax.text(xmn+(0.01*axx), y+height/2, '{:,.0f}'.format(v10+v11), fontsize=fontsize, verticalalignment='center', color='black')
+          else:
+            ax.text(xmn+(0.01*axx), y+height/2, '{:,.0f}'.format(v10+v11), fontsize=fontsize, verticalalignment='center', color='black')
+
+          width = v10
+          rect = patches.Rectangle((v10x-v10, y), width+(0.0025*axx), height, linewidth=1, edgecolor='#D80032', facecolor='#CD1818')
+          ax.add_patch(rect)
+          width=v11
+          rect = patches.Rectangle((v11x-v11, y), width+(0.0025*axx), height, linewidth=1, edgecolor='#3D0C11', facecolor='#3D0C11')
+          ax.add_patch(rect)
+          y+=3.2
+       #================== flags ================
+
+        X = [0.985*axx, 1.085*axx, 0.16*axx, 0.16*axx]
+        Y = [82, 82, 79, 72]
+
+        def getImage(path, zoom = .07):
+          return OffsetImage(plt.imread(path, format="png"), zoom=zoom)
+        for x, y, path in zip(X, Y, self.img_paths):
+          ab = AnnotationBbox(getImage(path), (x, y), frameon=False)
+          ax.add_artist(ab)
+
+        ax.text(0.86*axx, 82, self.img_lbls[0][0], fontsize=14, verticalalignment='center', color='black')
+        ax.text(1.115*axx, 82, self.img_lbls[0][1], fontsize=14, verticalalignment='center', color='black')
+        ax.text(0.65*axx, 85.7,self.lgd_lbls[0][0], fontsize=14, verticalalignment='center', color='black')
+        ax.text(0.49*axx, 85.7, self.lgd_lbls[0][1], fontsize=14, verticalalignment='center', color='black')
+        rect = patches.Rectangle((0.62*axx, 85), 0.02*axx, 1.5, linewidth=1, edgecolor='#CD1818', facecolor='#CD1818')
+        ax.add_patch(rect)
+        rect = patches.Rectangle((0.46*axx, 85), 0.02*axx, 1.5, linewidth=1, edgecolor='#3D0C11', facecolor='#3D0C11')
+        ax.add_patch(rect)
+
+
+        #===total deaths and injuries===
+        rect = patches.Rectangle((0.11*axx, 67), 0.27*axx, 20, linewidth=1, edgecolor='none', facecolor='none')
+        ax.add_patch(rect)
+        rect = patches.Rectangle((0.11*axx, 82.1), 0.27*axx, 5, linewidth=1, edgecolor='none', facecolor='gray')
+        ax.add_patch(rect)
+        ax.text(0.19*axx, 80, '{:,.0f}'.format(int(total1)), fontsize=10.5, verticalalignment='center',fontweight='bold', color='#3D0C11')
+        ax.text(0.19*axx, 78, '{:,.0f}'.format(int(total2)), fontsize=9.5, verticalalignment='center',fontweight='bold', color='#CD1818')
+        ax.text(0.19*axx, 73, '{:,.0f}'.format(int(total3)), fontsize=10.5, verticalalignment='center', fontweight='bold', color='#3D0C11')
+        ax.text(0.19*axx, 71, '{:,.0f}'.format(int(total4)),fontsize=10, verticalalignment='center', fontweight='bold',  color='#CD1818')
+        ax.text(0.125*axx, 84.5,self.box_title , fontsize=10, verticalalignment='center',fontweight='bold', color='w')
+
+        rect = patches.Rectangle((0.11*axx, 82), 5300, 0.3, linewidth=1, facecolor='#352F44')
+        ax.add_patch(rect)
+
+        #================= AnnotationBox Background ====================
+        # Display the image as the background of the plot
+        try:
+            img = mpimg.imread(self.map_img)
+        except FileNotFoundError:
+            logging.error("Map image file not found.")
+            return
+        ax.imshow(img, extent=[0.27*axx, 0.38*axx, 66, 82], aspect='auto',cmap='gray')
+
+        # ====================== Title =============================
+
+        ax.text(0.14*axx, 95,self.title, verticalalignment='center',
+                fontsize=24, fontname='sans-serif', color="#001524")
+        ax.text(0.01*axx, 5,self.signature,alpha=0.5, verticalalignment='center',
+                fontsize=11, color="black", fontstyle='italic')
+        rect = patches.Rectangle((0.04*axx, 95), 0.03*axx, 5, linewidth=1,edgecolor="none", facecolor='black')
+        ax.add_patch(rect)
+        rect = patches.Rectangle((0.04*axx, 90), 0.03*axx, 5, linewidth=1, edgecolor="none", facecolor='green')
+        ax.add_patch(rect)
+        trngle = patches.Polygon([[0.04*axx, 100], [0.04*axx, 90], [0.11*axx, 95]], closed=True, edgecolor="none", facecolor='red')
+        ax.add_patch(trngle)
+
+        ax= plt.gca()
+        for spine in ax.spines.values():
+            spine.set_linewidth(0)
+        ax.tick_params(axis='x', colors='#414A4C',length=3, width=3, labelsize=8)  # Set the color of the x-axis tick marks and labels
+        ax.tick_params(axis='y', colors='#414A4C', length=3, width=3, labelsize=8)
+        plt.axis('off')
+        plt.savefig("customizedbar.png")
+        plt.show()
+
+    def show_plot(self):
+        """
+        Show the customized bar plot.
+        """
+        max_value = self.clean_data()
+        grouped, total1, total2, total3, total4 = self.compute_statistics()
+        _, ax = self.create_plot()
+        self.draw_plot(ax, grouped, total1, total2, total3, total4, max_value)
+
+
+    
 if __name__ == "__main__":
     # Assuming data is your DataFrame
     data = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-    assert 'data' in globals(), "data is not defined"
-    stackbar = StackBar(data, "Palestinians Killed")
-    stackbar.show_plot()
+    data = data.to_dict(orient='records')
+    title = "Human Cost of Palestine-Israel conflict From 2000 To 2023"
+    signature = "aiNarabic.ai\nM. N. Gaber\nabunasseredu@gmail.com"
+    box_title = "TOTAL fatalities and injuries\n           2000 - 2023"
+    group_var = "Year"
+    columns = [("Palestinians Injuries","Palestinians Killed"),("Israelis Injuries","Israelis Killed")]
+    img_lbls = [("Palestine","Israel")]
+    legend_lbls = [("Injuries","Fatatlities")]
+    psimg = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\ps_h.png"
+    ilimg = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\il_h.png"
+    img_paths = [psimg,
+                 ilimg,
+                 psimg,
+                 ilimg]
+
+    map_img = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\pmap.png"
+
+    cdp = CustomizedBar(data=data, 
+                        title=title, 
+                        box_title=box_title, 
+                        gv=group_var, 
+                        cols=columns, 
+                        img_lbls=img_lbls, 
+                        lgd_lbls=legend_lbls, 
+                        img_paths=img_paths,
+                        map_img=map_img, 
+                        signature=signature)
+    cdp.show_plot()
+
 
