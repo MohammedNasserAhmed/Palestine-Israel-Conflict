@@ -588,38 +588,6 @@ class CustomizedBar(BaseModel):
         _, ax = self.create_plot()
         self.draw_plot(ax, grouped, total1, total2, total3, total4, max_value)
 
-
-    
-if __name__ == "__main__":
-    # Assuming data is your DataFrame
-    data = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-    data = data.to_dict(orient='records')
-    title = "Human Cost of Palestine-Israel conflict From 2000 To 2023"
-    signature = "aiNarabic.ai\nM. N. Gaber\nabunasseredu@gmail.com"
-    box_title = "TOTAL fatalities and injuries\n           2000 - 2023"
-    group_var = "Year"
-    columns = [("Palestinians Injuries","Palestinians Killed"),("Israelis Injuries","Israelis Killed")]
-    img_lbls = [("Palestine","Israel")]
-    legend_lbls = [("Injuries","Fatatlities")]
-    psimg = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\ps_h.png"
-    ilimg = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\il_h.png"
-    img_paths = [psimg,
-                 ilimg,
-                 psimg,
-                 ilimg]
-
-    map_img = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\pmap.png"
-
-    cdp = CustomizedBar(data=data, 
-                        title=title, 
-                        box_title=box_title, 
-                        gv=group_var, 
-                        cols=columns, 
-                        img_lbls=img_lbls, 
-                        lgd_lbls=legend_lbls, 
-                        img_paths=img_paths,
-                        map_img=map_img, 
-                        signature=signature)
-    cdp.show_plot()
+ 
 
 
