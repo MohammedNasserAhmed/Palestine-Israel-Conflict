@@ -1,2 +1,3 @@
-* linguist-language=Python, HTML
+*.py linguist-language=Python linguist-color=blue
+*.html linguist-language=HTML linguist-color=#f1e05a
 
