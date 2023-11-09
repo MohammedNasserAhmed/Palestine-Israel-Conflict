@@ -9,11 +9,11 @@
 <h1 align="center">Palestine-Israel-Conflict</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{MohammedNasserAhmed}}/Palestine-Israel-Conflict?color=56BEB8">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/{{MohammedNasserAhmed}}/Palestine-Israel-Conflict?color=56BEB8">
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/{{MohammedNasserAhmed}}/Palestine-Israel-Conflict?color=56BEB8">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/MohammedNasserAhmeds/Palestine-Israel-Conflict?color=56BEB8">
 
   <img alt="License" src="https://img.shields.io/github/license/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
 
