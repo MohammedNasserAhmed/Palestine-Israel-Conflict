@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="Palestine_israel_conflict" />
+  <img src="./.github/app.gif" alt="Palestine-israel-conflict" />
 
   &#xa0;
 
