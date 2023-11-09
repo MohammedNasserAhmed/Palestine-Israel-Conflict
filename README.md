@@ -11,7 +11,7 @@
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{MohammedNasserAhmed}}/palestine-israel-conflict?color=56BEB8">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/{{MohammedNasserAhmed}}/palestine-israel-conflict?color=56BEB8">
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/{{MohammedNasserAhmed}}/Palestine-Israel-Conflict?color=56BEB8">
 
   <img alt="Repository size" src="https://img.shields.io/github/repo-size/{{MohammedNasserAhmed}}/palestine-israel-conflict?color=56BEB8">
 
