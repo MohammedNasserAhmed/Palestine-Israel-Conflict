@@ -1,0 +1,22 @@
+
+style
+    table {
+        width: 80%!important;
+        text-align: center;
+
+    }
+    th, td {
+        padding: 8px;
+        text-align: center!important;
+    }
+    th {
+        background-color:#113946;
+        color: white;
+        font-size: 10pt!important;
+    }
+    td {
+        background-color: #F9F3CC;
+        color: black;
+        font-size: 8pt!important;
+        font-weight : bold!important;
+    }

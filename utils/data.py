@@ -15,6 +15,7 @@ class Loader:
     get_dataset_name(path): Returns the name of the file from the file path.
     get_title(t, size): Displays a title using matplotlib.
     """
+ 
     def __init__(self):
         pass
 
@@ -51,8 +52,9 @@ class Loader:
 
         return df
 
-    @staticmethod
-    def printout(data, show_index=False, title=None):
+    
+
+    def printout(self, data, show_index=False, title=None):
         """
         Display a pandas DataFrame with custom formatting.
         Removes trailing zeros and formats float numbers to 2 decimal places.
@@ -62,36 +64,14 @@ class Loader:
         show_index (bool): Whether or not to show the DataFrame index.
         title (str): The title of the DataFrame.
         """
+        with open('CSS\styles.css', 'r') as f:
+            css = f.read()
         # Define CSS styling
-        css = """
-        <style>
-            table {
-                width: 80%!important;
-                text-align: center;
 
-            }
-            th, td {
-                padding: 8px;
-                text-align: center!important;
-            }
-            th {
-                background-color: #113946;
-                color: white;
-                font-size: 10pt!!important;
-            }
-            td {
-                background-color: #F9F3CC;
-                color: black;
-                font-size: 8pt!important;
-                font-weight : bold!important;
-            }
-        </style>
-        """
-
-        data = data.applymap(lambda x: "{:.2f}".format(x).rstrip('0').rstrip('.') if isinstance(x, float) else x)
-        styled_df = HTML(css + data.to_html(index=show_index))
+        data = data.style.format("{:.2f}").set_table_styles([{"selector": "th", "props": [("background-color", "#113946"), ("color", "white"), ("font-size", "10pt")]}, {"selector": "td", "props": [("background-color", "#F9F3CC"), ("color", "black"), ("font-size", "8pt"), ("font-weight", "bold")]}])
+        styled_df = HTML(css + data.render(index=show_index))
         if title:
-            Loader.plot_title(title)
+            self.plot_title(title)
         display(styled_df)
 
     @staticmethod
