@@ -1,27 +1,27 @@
 <div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="Palestine-israel-conflict" />
+  <img src="./.github/app.gif" alt="Palestine-Israel-Conflict" />
 
   &#xa0;
 
-  <!-- <a href="https://palestine_israel_conflict.netlify.app">Demo</a> -->
+  <!-- <a href="https://Palestine-Israel-Conflict.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">Palestine-israel-conflict</h1>
+<h1 align="center">Palestine-Israel-Conflict</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{MohammedNasserAhmed}}/palestine-israel-conflict?color=56BEB8">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{MohammedNasserAhmed}}/Palestine-Israel-Conflict?color=56BEB8">
 
   <img alt="Github language count" src="https://img.shields.io/github/languages/count/{{MohammedNasserAhmed}}/Palestine-Israel-Conflict?color=56BEB8">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/{{MohammedNasserAhmed}}/palestine-israel-conflict?color=56BEB8">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/{{MohammedNasserAhmed}}/Palestine-Israel-Conflict?color=56BEB8">
 
-  <img alt="License" src="https://img.shields.io/github/license/{{MohammedNasserAhmed}}/palestine-israel-conflict?color=56BEB8">
+  <img alt="License" src="https://img.shields.io/github/license/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
 
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/{{YOUR_GITHUB_USERNAME}}/palestine_israel_conflict?color=56BEB8" /> -->
+  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
 
-  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/{{YOUR_GITHUB_USERNAME}}/palestine_israel_conflict?color=56BEB8" /> -->
+  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
 
-  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/{{YOUR_GITHUB_USERNAME}}/palestine_israel_conflict?color=56BEB8" /> -->
+  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
 </p>
 
 <!-- Status -->
