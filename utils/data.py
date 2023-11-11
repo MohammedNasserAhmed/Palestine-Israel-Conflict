@@ -1,8 +1,12 @@
 from pathlib import Path
 import pandas as pd
 import os
+from enum import Enum
 
 
+class Choice(Enum):
+    Injuries = "Injuries"
+    Fatalities = "Fatalities"
 
 class Loader:
     """
@@ -18,8 +22,9 @@ class Loader:
     """
 
     def __init__(self):
-        with open('path/to/your/.css file', 'r') as f:
-            self.css = f.read()
+        #with open('path/to/your/.css file', 'r') as f:
+        #    self.css = f.read()
+        pass
 
     def read_csv(self, path):
         """

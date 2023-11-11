@@ -6,7 +6,6 @@ import time
 import plotly.express as px
 from typing import List 
 from pydantic import BaseModel, validator, Field
-import matplotlib.pyplot as plt
 import logging
 
 

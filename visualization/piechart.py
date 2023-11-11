@@ -6,8 +6,8 @@ import pandas as pd
 from PIL import Image
 from pandas.api.types import is_numeric_dtype
 import plotly.offline as py
-from enum import Enum
 import itertools
+from utils.data import Choice
 
 
 
@@ -221,9 +221,7 @@ class PieChart:
         
         
         
-class Choice(Enum):
-    Injuries = "Injuries"
-    Fatalities = "Fatalities"
+
          
 class PieCharts:
     def __init__(self, df, choice:Choice):
