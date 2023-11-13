@@ -8,27 +8,9 @@
 
 <h1 align="center">Palestine-Israel-Conflict</h1>
 
-<p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/92ca4769de80c9a961d1ae19e3ec7eff038d6fec/outputs/customizedbar.png?raw=true)
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/MohammedNasserAhmeds/Palestine-Israel-Conflict?color=56BEB8">
-
-  <img alt="License" src="https://img.shields.io/github/license/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
-
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
-
-  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
-
-  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
-</p>
-
-<!-- Status -->
-
-<!-- <h4 align="center"> 
-	🚧  Palestine_israel_conflict 🚀 Under construction...  🚧
-</h4> 
 
 <hr> -->
 
