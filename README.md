@@ -45,7 +45,15 @@ In this project, we aim to provide a comprehensive analysis of the conflict and 
 
 ## :rocket: Methodology ##
 
-To analyze the data, we first cleaned and preprocessed it to ensure that it was in a format suitable for analysis. We then used Python libraries such as Seaborn, Matplotlib, Bokeh, and Plotly to create various types of visualizations, including heatmaps, bars, stacked bars, pie charts, histograms, and more.
+The methodology used in this project involved several steps to ensure that the data was properly analyzed and visualized.
+First, we used the Pandas library to read the CSV file containing the dataset. Pandas is a powerful library that allows for the effective inspection of data. We created numerous classes and methods to load, inspect, do statistical analysis, and show the dataset. We also used CSS styles to show the dataset in pretty tables.
+
+Next, we preprocessed the data to ensure that it was in a format suitable for analysis. We created methods to detect missing and incorrect values and resolved them. 
+After preprocessing, we used Python libraries such as Seaborn, Matplotlib, Bokeh, and Plotly to create various types of visualizations, including heatmaps, bars, stacked bars, pie charts, histograms, and more. These libraries offer different features and strengths that make them suitable for different types of visualizations. For example, Seaborn is a Python plotting library built on top of Matplotlib that provides a higher-level API, making it easier to create more complex visualizations with less code. Bokeh and Plotly, on the other hand, are both open-source libraries that allow users to create interactive and dynamic visualizations
+
+Finally, we analyzed the data to gain insights into the conflict and its impact on human lives. We calculated summary statistics such as mean, median, and skewness using Pandas. We also used groupby method to calculate statistics for each category in a column
+
+In summary, the methodology used in this project involved several steps, including data preprocessing, visualization, and analysis. We used Python libraries such as Pandas, Seaborn, Matplotlib, Bokeh, and Plotly to effectively analyze and visualize the data.
 
 ## :white_check_mark: Visualizations ##
 
@@ -58,7 +66,23 @@ The visualizations created in this project provide a comprehensive view of the c
   
 ## :checkered_flag: Insights ##
 
-The analysis of the data revealed several insights about the conflict and its impact on human lives. For example, the data showed that the conflict has claimed tens of thousands of lives and displaced many millions of people. The data also showed that the number of Palestinians and Israelis killed and injured has varied over time, with some years seeing a higher number of casualties than others.
+The analysis of the dataset revealed several key insights into the human cost of the Palestine-Israel conflict:
+
+Injuries and Fatalities
+
+Highest and Lowest Years: The year with the highest number of Palestinian fatalities was 2002, with 501 deaths, while the year with the lowest number of Palestinian fatalities was 2020, with 47 deaths. The year with the highest number of Israeli fatalities was 2005, with 119 deaths, while the year with the lowest number of Israeli fatalities was 2020, with 16 deaths.
+
+Highest and Lowest Months: The month with the highest number of Palestinian fatalities was July, with an average of 44 deaths per month, while the month with the lowest number of Palestinian fatalities was December, with an average of 18 deaths per month. The month with the highest number of Israeli fatalities was August, with an average of 10 deaths per month, while the month with the lowest number of Israeli fatalities was March, with an average of 4 deaths per month.
+
+Trends over Time: The overall trend for both Palestinian and Israeli fatalities is a decline over time. However, there have been fluctuations in the number of fatalities from year to year. For example, there was a sharp increase in the number of Palestinian fatalities in 2002, followed by a sharp decline in 2003.
+
+Total Injuries per Year: The total number of Palestinian injuries per year has ranged from 1,107 in 2000 to 4,690 in 2008. The total number of Israeli injuries per year has ranged from 1,054 in 2000 to 2,670 in 2005.
+
+Other Insights
+
+Ratio of Palestinian to Israeli Casualties and Injuries: The ratio of Palestinian to Israeli casualties has ranged from 1.6:1 in 2000 to 14.7:1 in 2002. The ratio of Palestinian to Israeli injuries has ranged from 1.1:1 in 2000 to 4.7:1 in 2008.
+
+
 
 Overall, the "Human Cost of Palestine-Israel Conflict 2000 - 2023" project provides a comprehensive analysis of the conflict and its impact on human lives. The visualizations created in this project help people understand the situation and read the conflict from a more insightful view.
 
