@@ -26,7 +26,7 @@
 
 ## :dart: Introduction ##
 
-The "Human Cost of Palestine-Israel Conflict 2000 - 2023" is a data analytics project that aims to analyze the data of the conflict to help people understand the situation and read the conflict from a more insightful view. The conflict between Israel and Palestine dates back to the end of the nineteenth century, and it has claimed tens of thousands of lives and displaced many millions of people. The data source for this project is the United Nations (OH).
+The "Human Cost of Palestine-Israel Conflict 2000 - 2023" is a data analytics project that aims to analyze the data of the conflict to help people understand the situation and read the conflict from a more insightful view. The conflict between Israel and Palestine dates back to the end of the nineteenth century, and it has claimed tens of thousands of lives and displaced many millions of people. The data source for this project is the United Nations (UN).
 
 The project includes multiple types of charts, such as heatmaps, bars, stacked bars, pie charts, histograms, and more. To create these visualizations, we used Python libraries such as Seaborn, Matplotlib, Bokeh, and Plotly. These libraries offer different features and strengths that make them suitable for different types of visualizations. For example, Seaborn is a Python plotting library built on top of Matplotlib that provides a higher-level API, making it easier to create more complex visualizations with less code. Bokeh and Plotly, on the other hand, are both open-source libraries that allow users to create interactive and dynamic visualizations.
 
@@ -71,11 +71,9 @@ The analysis of the dataset revealed several key insights into the human cost of
 
 ### **_Injuries and Fatalities_**
 
-- Highest and Lowest Years: The year with the highest number of Palestinian fatalities was 2014, with 1585 deaths, while the year with the lowest number of Palestinian fatalities was 2020, with 47 deaths. The year with the highest number of Israeli fatalities was 2005, with 119 deaths, while the year with the lowest number of Israeli fatalities was 2020, with 16 deaths.
+- Highest and Lowest Years: The year with the highest number of Palestinian fatalities was 2023, with 12027 deaths, while the year with the lowest number of Palestinian fatalities was 2020, with 30 deaths. The year with the highest number of Israeli fatalities was 2023, with 1429 deaths, while the year with the lowest number of Israeli fatalities was 2020, with 3 deaths.
 
-- Highest and Lowest Months: The month with the highest number of Palestinian fatalities was July, with an average of 44 deaths per month, while the month with the lowest number of Palestinian fatalities was December, with an average of 18 deaths per month. The month with the highest number of Israeli fatalities was August, with an average of 10 deaths per month, while the month with the lowest number of Israeli fatalities was March, with an average of 4 deaths per month.
-
-- Trends over Time: The overall trend for both Palestinian and Israeli fatalities is a decline over time. However, there have been fluctuations in the number of fatalities from year to year. For example, there was a sharp increase in the number of Palestinian fatalities in 2002, followed by a sharp decline in 2003.
+- Highest and Lowest Months: The month with the highest number of Palestinian fatalities was October, with an average of 1049 deaths per month, while the month with the lowest number of Palestinian fatalities was June, with an average of 37 deaths per month. The month with the highest number of Israeli fatalities was October, with an average of 126 deaths per month, while the month with the lowest number of Israeli fatalities was September, with an average of 6 deaths per month.
 
 - Total Injuries per Year: The total number of Palestinian injuries per year has ranged from 1,107 in 2000 to 4,690 in 2008. The total number of Israeli injuries per year has ranged from 1,054 in 2000 to 2,670 in 2005.
 
