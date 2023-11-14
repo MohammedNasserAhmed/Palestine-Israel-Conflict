@@ -71,7 +71,7 @@ The analysis of the dataset revealed several key insights into the human cost of
 
 ### **_Injuries and Fatalities_**
 
-- Highest and Lowest Years: The year with the highest number of Palestinian fatalities was 2002, with 501 deaths, while the year with the lowest number of Palestinian fatalities was 2020, with 47 deaths. The year with the highest number of Israeli fatalities was 2005, with 119 deaths, while the year with the lowest number of Israeli fatalities was 2020, with 16 deaths.
+- Highest and Lowest Years: The year with the highest number of Palestinian fatalities was 2014, with 1585 deaths, while the year with the lowest number of Palestinian fatalities was 2020, with 47 deaths. The year with the highest number of Israeli fatalities was 2005, with 119 deaths, while the year with the lowest number of Israeli fatalities was 2020, with 16 deaths.
 
 - Highest and Lowest Months: The month with the highest number of Palestinian fatalities was July, with an average of 44 deaths per month, while the month with the lowest number of Palestinian fatalities was December, with an average of 18 deaths per month. The month with the highest number of Israeli fatalities was August, with an average of 10 deaths per month, while the month with the lowest number of Israeli fatalities was March, with an average of 4 deaths per month.
 
