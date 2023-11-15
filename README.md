@@ -6,92 +6,88 @@
   <!-- <a href="https://Palestine-Israel-Conflict.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">Palestine-Israel-Conflict</h1>
 
-<p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/92ca4769de80c9a961d1ae19e3ec7eff038d6fec/outputs/customizedbar.png?raw=true)
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
-
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/MohammedNasserAhmeds/Palestine-Israel-Conflict?color=56BEB8">
-
-  <img alt="License" src="https://img.shields.io/github/license/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8">
-
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
-
-  <!-- <img alt="Github forks" src="https://img.shields.io/github/forks/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
-
-  <!-- <img alt="Github stars" src="https://img.shields.io/github/stars/MohammedNasserAhmed/Palestine-Israel-Conflict?color=56BEB8" /> -->
-</p>
-
-<!-- Status -->
-
-<!-- <h4 align="center"> 
-	🚧  Palestine_israel_conflict 🚀 Under construction...  🚧
-</h4> 
 
 <hr> -->
 
 <p align="center">
-  <a href="#dart-about">About</a> &#xa0; | &#xa0; 
-  <a href="#sparkles-features">Features</a> &#xa0; | &#xa0;
-  <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
+  <a href="#dart-Introduction">Inroduction</a> &#xa0; | &#xa0; 
+  <a href="#sparkles-Dataset-Features">Dataset Features</a> &#xa0; | &#xa0;
+  <a href="#rocket-Methodology">Methodology</a> &#xa0; | &#xa0;
+  <a href="#white_check_mark-Visualizations">Visualizations</a> &#xa0; | &#xa0;
+  <a href="#checkered_flag-Insights">Insights</a> &#xa0; | &#xa0;
   <a href="#memo-license">License</a> &#xa0; | &#xa0;
   <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">Author</a>
 </p>
 
 <br>
 
-## :dart: About ##
+## :dart: Introduction ##
 
-Describe your project
+The "Human Cost of Palestine-Israel Conflict 2000 - 2023" is a data analytics project that aims to analyze the data of the conflict to help people understand the situation and read the conflict from a more insightful view. The conflict between Israel and Palestine dates back to the end of the nineteenth century, and it has claimed tens of thousands of lives and displaced many millions of people. The data source for this project is the United Nations (UN).
 
-## :sparkles: Features ##
+The project includes multiple types of charts, such as heatmaps, bars, stacked bars, pie charts, histograms, and more. To create these visualizations, we used Python libraries such as Seaborn, Matplotlib, Bokeh, and Plotly. These libraries offer different features and strengths that make them suitable for different types of visualizations. For example, Seaborn is a Python plotting library built on top of Matplotlib that provides a higher-level API, making it easier to create more complex visualizations with less code. Bokeh and Plotly, on the other hand, are both open-source libraries that allow users to create interactive and dynamic visualizations.
 
-:heavy_check_mark: Feature 1;\
-:heavy_check_mark: Feature 2;\
-:heavy_check_mark: Feature 3;
+The dataset used in this project has only four columns and features: Year, Month, Palestinians Killed, Israelis Killed, Palestinians Injuries, and Israelis Injuries. The dataset has no details about children or women.
+In this project, we aim to provide a comprehensive analysis of the conflict and its impact on human lives. The following sections of this README file will provide more details about the project, including the methodology used, the visualizations created, and the insights gained from the analysis.
 
-## :rocket: Technologies ##
+## :sparkles: Dataset Features ##
 
-The following tools were used in this project:
+:heavy_check_mark: Year : The year in which the conflict occurred or the data was collected.;\
+:heavy_check_mark: Month : The month in which the conflict occurred or the data was collected;\
+:heavy_check_mark: Palestinian Injuries : The number of Palestinians who were injured as a result of the conflict;\
+:heavy_check_mark: Israelis Injuries : The number of Israelis who were injured as a result of the conflict;\
+:heavy_check_mark: Palestinian Killed : The number of Palestinians who were killed as a result of the conflict;\
+:heavy_check_mark: Israelis Killed : The number of Israelis who were killed as a result of the conflict;
 
-- [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/en/)
-- [React](https://pt-br.reactjs.org/)
-- [React Native](https://reactnative.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
 
-## :white_check_mark: Requirements ##
+## :rocket: Methodology ##
 
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
+The methodology used in this project involved several steps to ensure that the data was properly analyzed and visualized :
 
-## :checkered_flag: Starting ##
+* First, we used the Pandas library to read the CSV file containing the dataset. Pandas is a powerful library that allows for the effective inspection of data. We created numerous classes and methods to load, inspect, do statistical analysis, and show the dataset. We also used CSS styles to show the dataset in pretty tables.
 
-```bash
-# Clone this project
-$ git clone https://github.com/{{YOUR_GITHUB_USERNAME}}/palestine_israel_conflict
+* Next, we preprocessed the data to ensure that it was in a format suitable for analysis. We created methods to detect missing and incorrect values and resolved them. 
+After preprocessing, we used Python libraries such as Seaborn, Matplotlib, Bokeh, and Plotly to create various types of visualizations, including heatmaps, bars, stacked bars, pie charts, histograms, and more. These libraries offer different features and strengths that make them suitable for different types of visualizations. For example, Seaborn is a Python plotting library built on top of Matplotlib that provides a higher-level API, making it easier to create more complex visualizations with less code. Bokeh and Plotly, on the other hand, are both open-source libraries that allow users to create interactive and dynamic visualizations
 
-# Access
-$ cd palestine_israel_conflict
+* Finally, we analyzed the data to gain insights into the conflict and its impact on human lives. We calculated summary statistics such as mean, median, and skewness using Pandas. We also used groupby method to calculate statistics for each category in a column
 
-# Install dependencies
-$ yarn
+In summary, the methodology used in this project involved several steps, including data preprocessing, visualization, and analysis. We used Python libraries such as Pandas, Seaborn, Matplotlib, Bokeh, and Plotly to effectively analyze and visualize the data.
 
-# Run the project
-$ yarn start
+## :white_check_mark: Visualizations ##
 
-# The server will initialize in the <http://localhost:3000>
-```
+The visualizations created in this project provide a comprehensive view of the conflict and its impact on human lives. Some of the visualizations created include:
+* Heatmaps 
+* Bar charts 
+* Stacked bar charts 
+* Pie charts
+* Scatter charts
+  
+## :checkered_flag: Insights ##
+
+The analysis of the dataset revealed several key insights into the human cost of the Palestine-Israel conflict:
+
+### **_Injuries and Fatalities_**
+
+- Highest and Lowest Years: The year with the highest number of Palestinian fatalities was 2023, with 12027 deaths, while the year with the lowest number of Palestinian fatalities was 2020, with 30 deaths. The year with the highest number of Israeli fatalities was 2023, with 1429 deaths, while the year with the lowest number of Israeli fatalities was 2020, with 3 deaths.
+
+- Highest and Lowest Months: The month with the highest number of Palestinian fatalities was October, with an average of 1049 deaths per month, while the month with the lowest number of Palestinian fatalities was June, with an average of 37 deaths per month. The month with the highest number of Israeli fatalities was October, with an average of 126 deaths per month, while the month with the lowest number of Israeli fatalities was September, with an average of 6 deaths per month.
+
+- Total Injuries per Year: The total number of Palestinian injuries per year has ranged from 1,107 in 2000 to 4,690 in 2008. The total number of Israeli injuries per year has ranged from 1,054 in 2000 to 2,670 in 2005.
+
+
+- Ratio of Palestinian to Israeli Casualties and Injuries: The ratio of Palestinian to Israeli casualties has ranged from 1.6:1 in 2000 to 14.7:1 in 2002. The ratio of Palestinian to Israeli injuries has ranged from 1.1:1 in 2000 to 4.7:1 in 2008.
+
+Overall, the "Human Cost of Palestine-Israel Conflict 2000 - 2023" project provides a comprehensive analysis of the conflict and its impact on human lives. The visualizations created in this project help people understand the situation and read the conflict from a more insightful view.
 
 ## :memo: License ##
 
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
 
-Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">{{YOUR_NAME}}</a>
+Made with :heart: by <a href="https://github.com/MohammedNasserAhmed" target="_blank">M. N. Gaber</a>
 
 &#xa0;
 
