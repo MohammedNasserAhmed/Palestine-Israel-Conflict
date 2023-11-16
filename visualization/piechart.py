@@ -7,16 +7,18 @@ from PIL import Image
 from pandas.api.types import is_numeric_dtype
 import plotly.offline as py
 import itertools
-from utils.data import Choice
+from enum import Enum
 
-
-
+class Choice(Enum):
+    Injuries = "Injuries"
+    Fatalities = "Fatalities"
 
 
 class PieChart:
     def __init__(self, df, title, variables: List[List[str]],
                  legend_labels: List[str], pie_labels: List[str],
-                 images_path: List[str]):
+                 images_path: List[str],
+                 colors : List[str]=['#088395','#E55604','#053B50']):
         if not isinstance(df, pd.DataFrame):
             raise TypeError("data must be a pandas DataFrame")
         if not isinstance(title, str):
@@ -44,6 +46,7 @@ class PieChart:
         self.legend_labels=legend_labels
         self.pie_labels=pie_labels
         self.paths=images_path
+        self.colors = colors
 
 
     def preprocess_data(self):
@@ -84,13 +87,13 @@ class PieChart:
             print(f'An error occurred: {e}')
             return df
 
-    def create_charts(self,df1,df2,colors):
+    def create_charts(self,df1,df2):
         chart1 = go.Pie(labels=df1['group'], values=df1['sum'], hole=0.6,
                           name=self.pie_labels[0],textinfo='percent', texttemplate='%{percent:.0%}',
-                          marker=dict(colors=colors[:2]))
+                          marker=dict(colors=self.colors[:2]))
         chart2 = go.Pie(labels=df2['group'], values=df2['sum'], hole=0.6,
                           name=self.pie_labels[1],textinfo='percent', texttemplate='%{percent:.0%}',
-                          marker=dict(colors=colors[:2]))
+                          marker=dict(colors=self.colors[:2]))
         return chart1, chart2
 
 
@@ -115,10 +118,11 @@ class PieChart:
         fig.add_trace(chart2, 1, 2)
         return fig
 
-    def update_layout(self, fig, colors, total1, total2,df1row1, df1row2, df2row1, df2row2):
+    def update_layout(self, fig, total1, total2,df1row1, df1row2, df2row1, df2row2):
         
-        df1perc1="{:,.0f}".format(int((df1row1/total1)*100))
-        df1perc2="{:,.0f}".format(int((df1row2/total1)*100))
+        df1perc1="{:,.0f}".format((df1row1/total1)*100)
+        
+        df1perc2="{:,.0f}".format((df1row2/total1)*100)
         total1="{:,.0f}".format(total1)
         total2="{:,.0f}".format(total2)
         df1row1="{:,.0f}".format(df1row1)
@@ -137,8 +141,8 @@ class PieChart:
                 images.append(image_obj)
 
         fig.update_layout(images=images,
-                          annotations=[dict(text=self.pie_labels[0], x=0.05, y=1.15, font_size=20, showarrow=False, font_color=colors[2]),
-                                       dict(text=self.pie_labels[1], x=0.64, y=1.15, font_size=20, showarrow=False, font_color=colors[2]),
+                          annotations=[dict(text=self.pie_labels[0], x=0.05, y=1.15, font_size=20, showarrow=False, font_color=self.colors[2]),
+                                       dict(text=self.pie_labels[1], x=0.64, y=1.15, font_size=20, showarrow=False, font_color=self.colors[2]),
                                        dict(text='<b>{}'.format(total1), x=0.05, y=1.055, font_size=14, showarrow=False, font_color="#B31312"),
                                        dict(text='<b>{}'.format(total2), x=0.63, y=1.055, font_size=14, showarrow=False, font_color="#B31312"),
                                        dict(text=f"<b><i>You'll notice right away that the overwhelming majority of the deaths are Palestinians, and \
@@ -153,7 +157,19 @@ class PieChart:
 
                                             ),
                                             align="left"
-                                        )
+                                        ),
+                                    
+                                       dict(text = "aiNarabic.ai<br>M. N. Gaber<br>abunasseredu@gmail.com", 
+
+                                            x = -0.1, y=1.5,
+                                            showarrow=False,
+                                            font=dict(
+                                                size=14,
+                                                color="lightgray",
+
+                                            ),
+                                            
+                                            align="left")
                                        ])
 
         fig.update_layout(
@@ -164,9 +180,10 @@ class PieChart:
                     'xanchor': 'center',
                     'yanchor': 'top',
                     'font': {
-                        'color': f'{colors[2]}',
-                        'size': 22,
-                        'family': 'Arial'
+                        'color': f'{self.colors[2]}',
+                        'size': 24,
+                        'family': 'Copper Black'
+                
                     }
                 },
             uniformtext_minsize=12, uniformtext_mode='hide',
@@ -200,7 +217,7 @@ class PieChart:
             )
         return fig
 
-    def show_plot(self, colors=['#088395','#E55604','#053B50'], save_plot: bool = True):
+    def show_plot(self, save_plot: bool = True, save_filename: str = None):
         """
         Display and save a plot of pie charts.
 
@@ -212,11 +229,11 @@ class PieChart:
         df1,df2 = dfs
         total1,total2 = totals 
         df1row1,df1row2,df2row1,df2row2 = row_totals 
-        chart1, chart2 = self.create_charts(df1,df2,colors)
+        chart1, chart2 = self.create_charts(df1,df2)
         fig = self.create_subplot(chart1, chart2)
-        fig = self.update_layout(fig,colors, total1, total2,df1row1,df1row2, df2row1, df2row2)
-        if save_plot:
-            py.plot(fig, filename='pie.html')
+        fig = self.update_layout(fig, total1, total2,df1row1,df1row2, df2row1, df2row2)
+        if save_plot and save_filename is not None:
+            py.plot(fig, filename=save_filename)
         fig.show()
         
         
@@ -224,14 +241,37 @@ class PieChart:
 
          
 class PieCharts:
-    def __init__(self, df, choice:Choice):
+    def __init__(self, df, choice:Choice, title:str = None, colors : List[str]=['#088395','#E55604','#053B50']):
+        """
+        Initialize the class with the given parameters.
+
+        Args:
+            df (pd.DataFrame): The pandas DataFrame containing the data.
+            choice (Choice): The choice value indicating whether to consider 'Injuries' or 'Fatalities'.
+            save_filename_without_extension (str, optional): The filename without extension to save the data. Defaults to None.
+
+        Raises:
+            TypeError: If df is not a pandas DataFrame or choice is not a valid Choice value.
+            ValueError: If df is empty or if it doesn't contain the necessary columns based on the choice value.
+            TypeError: If save_filename_without_extension is not a string or None.
+        """
         if not isinstance(df, pd.DataFrame):
             raise TypeError("df must be a pandas DataFrame")
         if not isinstance(choice, Choice):
             raise TypeError("Invalid choice value. Allowed values are 'Injuries' and 'Fatalities'.")
+        if df.empty:
+            raise ValueError("df cannot be empty")
+        if choice == Choice.Injuries and not all(col in df.columns for col in ["Palestinians Injuries", "Israelis Injuries"]):
+            raise ValueError("Missing necessary columns for choice 'Injuries'")
+        if choice == Choice.Fatalities and not all(col in df.columns for col in ["Palestinians Killed", "Israelis Killed"]):
+            raise ValueError("Missing necessary columns for choice 'Fatalities'")
         self.df = df
         self.choice = choice
-        
+        self.colors = colors
+        if title is None :
+            self.title = "<i>Human-Cost of the Palestine-Israel Conflict (2000 - 2023)</i>"
+        else:
+            self.title = title
     def preprocess_data(self):
         columns_mapping = {
             "Injuries": ["Palestinians Injuries", "Israelis Injuries"],
@@ -308,12 +348,12 @@ class PieCharts:
         except Exception as e:
             raise Exception("Failed to create subplot: " + str(e))
 
-    def update_layout(self, fig, title_text=None, title_x=0.45, title_y=0.95, title_xanchor='center', 
-                      title_yanchor='top', title_font_color='#5F9EA0', 
-                      title_font_size=22, title_font_family='Arial', 
-                      annotations=None, margin_l=50, margin_r=50, margin_b=50, margin_t=108, margin_pad=0, 
+    def update_layout(self, fig, title_text=None, title_x=0.435, title_y=0.87, title_xanchor='center', 
+                      title_yanchor='top', 
+                      title_font_size=24, title_font_family='Arial', 
+                      margin_l=50, margin_r=50, margin_b=50, margin_t=200, margin_pad=0, 
                       xaxes_matches=None, xaxes_showticklabels=True, xaxes_visible=True, legend_yanchor="top", 
-                      legend_y=1.125, legend_xanchor="center", legend_x=0.485, legend_font_size=14, 
+                      legend_y=1.28, legend_xanchor="center", legend_x=0.485, legend_font_size=14, 
                       legend_font_color='#5F9EA0', legend_font_family='Rockwell', 
                       template_paper_bgcolor='#F0F0F0', template_font_family='Rockwell'):
         """
@@ -359,13 +399,11 @@ class PieCharts:
                 'xanchor': title_xanchor,
                 'yanchor': title_yanchor,
                 'font': {
-                    'color': title_font_color,
+                    'color': "#6A9C89",
                     'size': title_font_size,
                     'family': title_font_family
                 }
             },
-            annotations=annotations if annotations is not None else [dict(text='Palestine', x=0.18, y=1.0, font_size=20, showarrow=True, font_color="#C70039"),
-                                                                     dict(text='Israel', x=0.75, y=1.0, font_size=20, showarrow=True, font_color='#C70039')],
             margin=dict(
                 l=margin_l,
                 r=margin_r,
@@ -392,12 +430,32 @@ class PieCharts:
 
         fig.update_traces(textposition='inside')
         fig.update_layout(
+             annotations =[dict(text = "aiNarabic.ai<br>M. N. Gaber<br>abunasseredu@gmail.com",
+                            x = 0.0, y=1.5,
+                            showarrow=False,
+                            font=dict(
+                                size=14,
+                                color="lightgray"
+
+                            ),align="left"),
+                           
+                           dict(text = self.title,
+                                x = 0.5, y=1.5,
+                            showarrow=False,
+                            font=dict(
+                                size=24,
+                                color=self.colors[2]
+
+                            ),align="center"),
+                           dict(text='Palestine', x=0.18, y=1.0, font_size=20, showarrow=True, font_color=self.colors[2]),
+                           dict(text='Israel', x=0.75, y=1.0, font_size=20, showarrow=True, font_color=self.colors[2])],
+             
+             
             template='customtemplate'
-            )
-       
+        )
         return fig
 
-    def show_plot(self, save_plot: bool =True):
+    def show_plot(self, save_plot: bool =True, save_filename: str =None):
         """
         Orchestrates the tasks of preprocessing data, creating charts, creating subplots, updating layout, and showing the figure.
         """
@@ -405,8 +463,8 @@ class PieCharts:
         charts = self.create_charts(df, cols)
         subplot = self.create_subplot(charts)
         layout = self.update_layout(fig = subplot)
-        if save_plot:
-            py.plot(layout, filename='pies.html')
+        if save_plot and save_filename is not None:
+            py.plot(layout, filename=save_filename)
         self.show_figure(layout)
 
  
@@ -417,3 +475,18 @@ class PieCharts:
         fig.show()
 
 
+#if __name__ == "__main__":
+
+    #df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
+    #title = "<b>Fatalities - Injuries<b><br>" +"<i>Human-Cost of the Palestine-Israel Conflict (2000 - 2023)</i>"
+    #title= u"ضحايا الصراع الفلسطيني الإسرائيلي من 2000 حتى 2023"
+    #paths = ["E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\people.png",
+    #         "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\people.png"]
+    #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\TotalPie.html"
+    #piechart = PieChart(df, title, variables= [["Palestinians Killed","Israelis Killed"],["Palestinians Injuries","Israelis Injuries"]],
+    #                  legend_labels=["Palestinians", 'Israelis'], pie_labels=["Fatalities",'Injuries'], images_path=paths)
+    #piechart.show_plot(save_filename=save_filename)
+    #choice = Choice.Fatalities
+    #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\FatalitiesPie.html"
+    #piechart = PieCharts(df, choice=choice)
+    #piechart.show_plot(save_filename=save_filename)

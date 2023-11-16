@@ -346,7 +346,7 @@ class Bubbles:
         fig.show()
 
 
-data = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-data=data.to_dict(orient="records")
-scatter_plot = PXScatter(df=data, var="Israelis Injuries")
-scatter_plot.plot_scatter()
+#data = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
+#data=data.to_dict(orient="records")
+#scatter_plot = PXScatter(df=data, var="Israelis Injuries")
+#scatter_plot.plot_scatter()
