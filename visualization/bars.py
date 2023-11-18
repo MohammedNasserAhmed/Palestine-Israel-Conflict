@@ -12,6 +12,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from typing import List, Tuple
 from pydantic import BaseModel, Field, validator
 from matplotlib.lines import Line2D
+import yaml
 
 
 
@@ -542,14 +543,9 @@ class CustomizedBar(BaseModel):
           ab = AnnotationBbox(getImage(path), (x, y), frameon=False)
           ax.add_artist(ab)
 
-        ax.text(0.86*axx, 82, self.img_lbls[0][0], fontsize=14, verticalalignment='center', color='black')
+        ax.text(0.83*axx, 82, self.img_lbls[0][0], fontsize=14, verticalalignment='center', color='black')
         ax.text(1.115*axx, 82, self.img_lbls[0][1], fontsize=14, verticalalignment='center', color='black')
-        ax.text(0.65*axx, 85.7,self.lgd_lbls[0][0], fontsize=15, verticalalignment='center', color='black')
-        ax.text(0.49*axx, 85.7, self.lgd_lbls[0][1], fontsize=15, verticalalignment='center', color='black')
-        rect = patches.Rectangle((0.62*axx, 85), 0.02*axx, 1.5, linewidth=1, edgecolor='#CD1818', facecolor='#CD1818')
-        ax.add_patch(rect)
-        rect = patches.Rectangle((0.46*axx, 85), 0.02*axx, 1.5, linewidth=1, edgecolor='#3D0C11', facecolor='#3D0C11')
-        ax.add_patch(rect)
+        
         
         #===total deaths and injuries===
         rect = patches.Rectangle((0.11*axx, 17), 0.27*axx, 20, linewidth=1, edgecolor='none', facecolor='none')
@@ -574,12 +570,14 @@ class CustomizedBar(BaseModel):
             return
         ax.imshow(img, extent=[0.29*axx, 0.38*axx, 14, 32], aspect='auto',cmap='gray')
 
-        # ====================== Title =============================
+        # ====================== Title and signature =============================
 
         ax.text(0.14*axx, 95,self.title, verticalalignment='center',
                 fontsize=24,weight='bold', fontname='sans-serif', color="#001524")
         ax.text(0.01*axx, 5,self.signature,alpha=0.5, verticalalignment='center',
-                fontsize=11, color="lightgray", fontstyle='italic')
+                fontsize=12, color="lightgray", fontstyle='italic')
+        ax.text(1.15*axx, 1,"DATA SOURCE by UN",alpha=0.5, verticalalignment='center',
+                fontsize=13, color="gray", fontstyle='italic')
         rect = patches.Rectangle((0.04*axx, 95), 0.03*axx, 5, linewidth=1,edgecolor="none", facecolor='black')
         ax.add_patch(rect)
         rect = patches.Rectangle((0.04*axx, 90), 0.03*axx, 5, linewidth=1, edgecolor="none", facecolor='green')
@@ -593,61 +591,57 @@ class CustomizedBar(BaseModel):
         ax.tick_params(axis='x', colors='#414A4C',length=3, width=3, labelsize=8)  # Set the color of the x-axis tick marks and labels
         ax.tick_params(axis='y', colors='#414A4C', length=3, width=3, labelsize=8)
         self._customize_legend(ax) 
-    def _customize_legend(self, ax):
-        bc = ["#CD1818","#3D0C11"]
+        
+    def _customize_legend(self, ax) -> None:
+        """
+         Inputs
+         `ax`: The axis object to draw the plot on.
+        ___
+         Pipeline
+        1. Define the colors for the legend markers.
+        2. Define the labels for the legend.
+        3. Define the markers for the legend.
+        4. Define the size of the markers.
+        5. Create a list of Line2D objects representing the legend handles.
+        6. Load the legend configuration from a YAML file.
+        7. Create the legend using the handles, labels, and legend configuration.
+        8. Remove the frame around the legend.
+        ___
+         Outputs
+        None. The method modifies the input `ax` object to customize the legend of the plot.
+        """
+        bc = ["#CD1818", "#3D0C11"]
         labels = [self.lgd_lbls[0][0], self.lgd_lbls[0][1]]
         markers = ['s', 's']
-        handles = [Line2D([0], [0], marker=marker, linestyle='None', color=color) for marker, color in zip(markers, bc)]
-        leg = ax.legend(handles,labels, loc='upper right',  
-                         fancybox=True, ncol=2, labelspacing=1.5, framealpha=1, shadow=True, 
-                         borderpad=1, frameon=True, edgecolor='black', facecolor='#FFFAF0',
-                         )
-        
+        markersize = 10  # Adjust the marker size as desired
+        handles = [Line2D([0], [0], marker=marker, linestyle='None', color=color, markersize=markersize) for marker, color in zip(markers, bc)]
+        with open('legend_config.yaml', 'r') as file:
+            legend_config = yaml.safe_load(file)
+        leg = ax.legend(handles, labels ,**legend_config)
         leg.get_frame().set_linewidth(0)
+    
+    
     def show_plot(self, save_filename:str = None):
         """
         Show the customized bar plot.
+
+        Args:
+            save_filename (str, optional): The filename to save the plot. Defaults to None.
         """
-        max_value = self.clean_data()
-        grouped, total1, total2, total3, total4 = self.compute_statistics()
-        _, ax = self.create_plot()
-        self.draw_plot(ax, grouped, total1, total2, total3, total4, max_value)
-        plt.axis('off')
-        if save_filename is not None:
-            plt.savefig(save_filename)
-        plt.show()
+        try:
+            max_value = self.clean_data()
+            grouped, total1, total2, total3, total4 = self.compute_statistics()
+            _, ax = self.create_plot()
+            self.draw_plot(ax, grouped, total1, total2, total3, total4, max_value)
+            plt.axis('off')
+            if save_filename is not None:
+                plt.savefig(save_filename)
+            plt.show()
+        except Exception as e:
+            logging.error(f"An error occurred while showing the plot: {str(e)}")
+        else:
+            logging.info("Plot shown")
  
 
 
-
-if __name__ =="__main__":
-    df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-    data = df.to_dict(orient='records')
-    title = "Human Cost of Palestine-Israel conflict From 2000 To 2023"
-    signature = "aiNarabic.ai\nM. N. Gaber\nabunasseredu@gmail.com"
-    box_title = "TOTAL fatalities and injuries\n           2000 - 2023"
-    group_var = "Year"
-    columns = [("Palestinians Injuries","Palestinians Killed"),("Israelis Injuries","Israelis Killed")]
-    img_lbls = [("Palestine","Israel")]
-    legend_lbls = [("Injuries","Fatatlities")]
-    psimg = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\ps_h.png"
-    ilimg = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\il_h.png"
-    img_paths = [psimg,
-                    ilimg,
-                    psimg,
-                    ilimg]
-
-    map_img = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\pmap.png"
-    save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\customizedbar.png"
-    cdp = CustomizedBar(data=data, 
-                        title=title, 
-                        box_title=box_title, 
-                        gv=group_var, 
-                        cols=columns, 
-                        img_lbls=img_lbls, 
-                        lgd_lbls=legend_lbls, 
-                        img_paths=img_paths,
-                        map_img=map_img, 
-                        signature=signature)
-    cdp.show_plot(save_filename=save_filename)
 

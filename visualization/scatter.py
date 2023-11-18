@@ -7,10 +7,13 @@ import plotly.express as px
 from typing import List 
 from pydantic import BaseModel, validator, Field
 import logging
+import matplotlib.patches as patches
 
 
 class Histogram:
-    def __init__(self, data: pd.DataFrame, variable: str, colors: List[str] = ["#BCA37F", "#113946", '#053B50']):
+    def __init__(self, data: pd.DataFrame, variable: str, 
+                 colors: List[str] = ["#BCA37F", "#113946", '#053B50'],
+                 title:str=None):
         """
         Initialize the Histogram class.
 
@@ -45,6 +48,7 @@ class Histogram:
             raise ValueError("All elements in colors must be strings")
 
         self.colors = colors
+        self.title = title
 
     def create_histogram(self, width, height):
         """
@@ -60,21 +64,23 @@ class Histogram:
             color_discrete_sequence = self.colors
         fig = px.histogram(data_frame=self.data[columns], x="Year", y=self.variable, color="Group",
                            hover_data=columns, color_discrete_sequence=color_discrete_sequence)
-
+        self._create_annotations(fig)
         fig.update_layout(
             
             title={
-                'text': self.variable,
+                'text': self.title,
                 'font': {
                     'size': 24,
                     'color': self.colors[2],
                     'family': 'bold'
+                   
                 },
                 'x': 0.5,
-                'y': 0.95,
+                'y': 0.98,
                 'xanchor': 'center',
                 'yanchor': 'top'
             },
+            
             xaxis=dict(
                 title={
                     'font': {
@@ -100,15 +106,49 @@ class Histogram:
                 gridwidth=3,
                 tickangle=-45,
                 automargin=True
+                
             ),
             paper_bgcolor='#F1EFEF',
             plot_bgcolor='white',
             width=width,
             height=height
         )
+        
         return fig
+    def _create_annotations(self, fig): 
+        """
+        Create annotations for the given figure.
 
-    def show(self, width: int = 1000, height: int = 500):
+        Args:
+            fig (go.Figure): The figure to add annotations to.
+        """
+        texts = ["aiNarabic", f"{self.variable}"]
+        colors = ['lightgray', '#3F1D38']  
+        font_sizes = [14,19]  
+        xs =[0.045,0.5]
+        ys=[1.07,1.06]
+        bc =["#F1EFEF",'white']
+        for text, color, font_size, x, y, bg_color in zip(texts, colors, font_sizes, xs, ys, bc):
+            text_annotation = go.layout.Annotation(
+                x=x,
+                y=y,
+                xref='paper',
+                yref='paper',
+                xanchor='center',
+                yanchor='top',
+                showarrow=False,
+                text=text,
+                align='center',
+                font_size=font_size,
+                font_color=color,
+                bgcolor=bg_color
+            )
+            fig.add_annotation(text_annotation)
+
+                
+    def show(self, width: int = 1000, 
+             height: int = 500, 
+             save_filename:str = None):
         """
         Show the histogram plot.
 
@@ -117,6 +157,8 @@ class Histogram:
         - height (int): The height of the histogram plot.
         """
         fig = self.create_histogram(width, height)
+        if save_filename is not None:
+            pio.write_html(fig, file=save_filename)
         fig.show()
 
 
@@ -124,7 +166,7 @@ class Histogram:
 class PXScatter(BaseModel):
     df: List[dict] = Field(..., description="Input data should be a dictionary")
     var: str =  Field(..., description="Input variable should be a string and a column in data")
-
+    title : str =Field(..., fdescription = "Tile of total project")
     @validator('df')
     def validate_df(cls, df):
         if not isinstance(df, list):
@@ -169,45 +211,100 @@ class PXScatter(BaseModel):
         return wrapper
 
     @log_execution_time
-    def plot_scatter(self):
+    def show(self, save_filename: str = None):
+
         try:
             logging.info('Starting to plot scatter')
-            
-            config = {
-                'x': self.df.index,
-                'y': self.var,
-                'color': self.var,
-                'size_max': 40,
-                'size': self.df[self.var],
-                'color_continuous_scale': 'Turbid',
-                'hover_data': [self.var]
-            }
-            
-            fig = px.scatter(self.df, **config)
-            
-            fig.update_xaxes(title_text='', tickfont=dict(size=8, color='#414A4C'))
-            fig.update_yaxes(title_text=self.var, tickfont=dict(size=8, color='#414A4C'))
-        
-            # Customize the colorbar
-            fig.update_coloraxes(colorbar=dict(tickfont=dict(size=8, color='#414A4C')))
-        
-            # Customize the title
-            fig.update_layout(
-                title_text=self.var, 
-                title_font=dict(size=14, 
-                                color='#0039A6'),
-                title_x = 0.5,
-                width=800,  # Set the width of the figure
-                height=400
+            if self.var.split()[1] == "Killed":
+                label = f"{self.var.split()[0]} Fatalities"
+            else :
+                label = self.var
+            # Create a scatter trace
+            trace = go.Scatter(
+                x=self.df.index,
+                y=self.df[self.var],
+                mode='markers',
+                marker=dict(
+                    size=self.df[self.var],
+                    sizeref=(2.0 * self.df[self.var].max()) / (70**2),
+                    sizemode='area',
+                    color=self.df[self.var],
+                    colorscale="temps",
+                    colorbar=dict(
+                        title=dict(
+                            text="",
+                            font=dict(size=12, color='#414A4C')
+                        ),
+                        tickfont=dict(size=8, color='#777'),
+                        
+                        
+                    ),
+                    showscale=True
+                ),
+                hoverinfo='text',
+                hovertext='Sum of: ' + label + ": "+ self.df[self.var].astype(str)
             )
+            
+            # Create a layout
+            layout = go.Layout(
+                title=dict(
+                    text=label.upper(),
+                    font=dict(size=16, color='#0039A6'),
+                    x=0.5,
+                    y=0.85
+                ),
+                xaxis=dict(
+                    
+                    showticklabels=False, showgrid=False
+                ),
+                yaxis=dict(
+                    showticklabels=False, showgrid=False
+                ),
+                width=800,  # Set the width of the figure
+                height=500,
+                annotations =[dict(text = "aiNarabic.ai<br>DATA SOURCE : https://www.ochaopt.org/data/casualties",
+                            y = 0.0, x=1.0,
+                            xref="paper",yref="paper",
+                            showarrow=False,
+                            font=dict(
+                                size=14,
+                                color="gray"
+
+                            ),align="left"),
+                             
+                              dict(text = self.title,
+                            x = 0.5, y=1.25,
+                            xref="paper",yref="paper",
+                            showarrow=False,
+                            #bgcolor = "",
+                            font=dict(
+                                size=24,
+                                color="#872341",
+                               
+                                family = "bold",
+
+                            ),align="center")
+                              ]
+            )
+            # Define the rectangle data points
+            
+
+            # Create a figure
+            fig = go.Figure(data=[trace], layout=layout)
+            # Show the figure
+            if  save_filename is not None :
+                fig.write_html(save_filename)
             fig.show()
+
             logging.info('Finished plotting scatter')
         except Exception as e:
             logging.error(f'Error plotting scatter: {str(e)}')
             raise
 
+
 class Bubbles:
-    def __init__(self, data, colors, required_columns=['Year', 'Month', 'Deaths', 'Injuries', 'Group']):
+    def __init__(self, data, title = None,
+                 colors : List[str] = ['#088395','#E55604','#04364A']):
         """
         Initialize the class with data, colors, and optional required columns.
 
@@ -232,23 +329,22 @@ class Bubbles:
         if not all(isinstance(color, str) for color in colors):
             raise ValueError("All elements in colors must be strings")
 
-        self.colors = colors or  ['#088395','#E55604','#053B50']
+        self.colors = colors 
 
-        missing_columns = [col for col in required_columns if col not in data.columns]
-        if missing_columns:
-            raise ValueError(f"Data is missing the following required columns: {', '.join(missing_columns)}")
-    
+        
+        self.title = title 
         self.create_text_and_sizes()
+        
     def create_text_and_sizes(self):
         """
         Create text and size columns
         """
         self.data['text'] = self.data.apply(lambda row: ('Year: {year}<br>'+
                                                          'Month: {month}<br>'+
-                                                         'Deaths: {deaths}<br>'+
+                                                         'Fatalities: {fatalities}<br>'+
                                                          'Injuries: {injuries}<br>').format(year=row['Year'],
                                                                                             month=row['Month'],
-                                                                                            deaths=row['Deaths'],
+                                                                                            fatalities=row['Fatalities'],
                                                                                             injuries=row['Injuries']), axis=1)
         self.data['size'] = self.data['Injuries'].apply(math.sqrt)
 
@@ -264,9 +360,9 @@ class Bubbles:
         groups_data = {group: self.data[self.data['Group'] == group] for group in groups}
 
         fig = go.Figure()
-
+        
         fig.add_traces([go.Scatter(
-            x=group['Deaths'], y=group['Injuries'],
+            x=group['Fatalities'], y=group['Injuries'],
             name=group_name, text=group['text'],
             marker_size=group['size'],
             marker_color=self.colors[2] if group_name == 'Israel' else self.colors[1]
@@ -278,26 +374,14 @@ class Bubbles:
         fig.update_xaxes(showline=False, overwrite=False)
 
         fig.update_layout(
-            title={
-                'text': 'Deaths v. Injuries',
-                'font': {
-                    'size': 24,
-                    'color': self.colors[2],
-                    'family': 'bold'
-                },
-                'x': 0.5,
-                'y': 0.9,
-                'xanchor': 'center',
-                'yanchor': 'top'
-            },
+    
             xaxis=dict(
                 title={
-                    'text': 'Deaths',
+                    'text': self.data.columns[3].upper(),
                     'font': {
-                        'size': 18,
+                        'size': 14,
                         'color': self.colors[2],
                         'family': 'bold'
-                        # 'Courier New, monospace'
                     }
                 },
                 gridcolor='#F1EFEF',
@@ -307,9 +391,9 @@ class Bubbles:
             ),
             yaxis=dict(
                 title={
-                    'text': 'Injuries',
+                    'text': self.data.columns[2].upper(),
                     'font': {
-                        'size': 18,
+                        'size': 14,
                         'color': self.colors[2],
                         'family': 'bold'
                     }
@@ -317,19 +401,41 @@ class Bubbles:
                 gridcolor='#F1EFEF',
                 gridwidth=3,
                 tickangle=-45
+                
             ),
+             annotations =[dict(text = "aiNarabic.ai",
+                            x = 0.0, y=1.08,
+                            xref="paper",yref="paper",
+                            showarrow=False,
+                            font=dict(
+                                size=14,
+                                color="lightgray"
+
+                            ),align="left"),
+                            dict(text = self.title,
+                            x = 0.5, y=1.3,
+                            xref="paper",yref="paper",
+                            showarrow=False,
+                            #bgcolor = "",
+                            font=dict(
+                                size=24,
+                                color=self.colors[2],
+                               
+                                family = "bold",
+
+                            ),align="center")],
 
             paper_bgcolor='#F1EFEF',
             plot_bgcolor='white',
 
-            width=1000,
-            height=500  #
+            width=800,
+            height=450  #
 
         )
-
+        
         return fig
 
-    def show(self, filename='bubblechart.html', save=True):
+    def show(self, save_filename : str = None):
         """
         Display the plot
         Args:
@@ -339,14 +445,17 @@ class Bubbles:
         fig = self.create_figure()
         if fig is None:
             raise ValueError("Failed to create the plot")
-        if not isinstance(filename, str) or not filename.endswith('.html'):
-            raise ValueError("Invalid filename. Filename must be a string and end with '.html'")
-        if save:
-            pio.write_html(fig, file=filename)
+        if save_filename is not None:
+            if not save_filename.endswith('.html'):
+                raise ValueError("Invalid filename. Filename must be end with '.html'")
+        
+            pio.write_html(fig, file=save_filename)
         fig.show()
 
-
-#data = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-#data=data.to_dict(orient="records")
-#scatter_plot = PXScatter(df=data, var="Israelis Injuries")
-#scatter_plot.plot_scatter()
+if __name__ == "__main__":
+    data = pd.read_excel("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.xlsx")
+    save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\Bubbles.html"
+    #data=data.to_dict(orient="records")
+    title = "Human Cost of Palestine-Israel Conflict <br> 2000 To Oct-2023"
+    scatter_plot = Bubbles(data=data, title=title)
+    scatter_plot.show(save_filename)
