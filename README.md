@@ -42,6 +42,7 @@ In this project, we aim to provide a comprehensive analysis of the conflict and 
 :heavy_check_mark: Palestinian Killed : The number of Palestinians who were killed as a result of the conflict;\
 :heavy_check_mark: Israelis Killed : The number of Israelis who were killed as a result of the conflict;
 
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/987ce6ab131d8a4c6e05ed7bd243361dbb74ea25/outputs/Fheatmapgo.html?raw=true)
 
 ## :rocket: Methodology ##
 
@@ -60,10 +61,6 @@ In summary, the methodology used in this project involved several steps, includi
 
 The visualizations created in this project provide a comprehensive view of the conflict and its impact on human lives. Some of the visualizations created include:
 * Heatmaps
-![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/987ce6ab131d8a4c6e05ed7bd243361dbb74ea25/outputs/Fheatmapgo.html?raw=false)
-
-
-  
 * Bar charts 
 * Stacked bar charts 
 * Pie charts
