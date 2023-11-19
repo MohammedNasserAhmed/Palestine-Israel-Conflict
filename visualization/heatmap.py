@@ -94,7 +94,8 @@ class HeatmapPlot:
         vmax = max(data[0].max().max(), data[1].max().max())
         fig, axn = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(8, 8))
         cbar_ax = fig.add_axes([.90, .3, .03, .4])
-
+        fig.suptitle("Human Cost of Palestine-Israel Conflict (2000 To Oct-2023)", 
+                     size=18, x=0.5)
         for (i, ax), data_item, var in zip(enumerate(axn.flat), data, vars):
             heatmap_array = data_item.values.T
             heatmap = sns.heatmap(heatmap_array, ax=ax, cmap=self.cmap,
@@ -110,13 +111,14 @@ class HeatmapPlot:
         self._customize_colorbar(heatmap, cbar_ax)
         fig.text(-0.07, 0.5, 'MONTH', fontsize=10, color='#2E4F4F', rotation=0, va='center')
         fig.text(0.45, -0.02, 'YEAR', fontsize=10, color='#2E4F4F', rotation=0, va='center')
+        fig.text(0.9, 0.0, 'aiNarabic.ai\nData Source : OCHA', fontsize=8, color='#279EFF', rotation=0, va='center')
         fig.tight_layout(rect=[0, 0, .9, 1])
         plt.subplots_adjust(hspace=0.1)
         return fig
 
     def _customize_colorbar(self, heatmap, cbar_ax):
         cbar = heatmap.figure.colorbar(heatmap.collections[0], cax=cbar_ax)
-        cbar.set_label(self.choice, fontsize=10, color='#2E4F4F', rotation=360, labelpad=40)
+        #cbar.set_label(self.choice.value,, fontsize=10, color='#2E4F4F', rotation=90, labelpad=30)
         cmap = cbar.cmap
         norm = cbar.norm
         cbar.outline.set_edgecolor('none')
@@ -151,7 +153,7 @@ class HeatmapPlot:
         self.update_layout(fig, max_value)
         return fig
     def add_subtitles(self, fig):
-        subtitle_font = dict(size=14, color="#04364A")
+        subtitle_font = dict(size=14, color="#C51605")
 
         fig.add_annotation(dict(
             xref='paper', yref='paper', x=0.5, y=1.05,
@@ -159,7 +161,17 @@ class HeatmapPlot:
         fig.add_annotation(dict(
             xref='paper', yref='paper', x=0.5, y=0.5,
             text='Israelis', showarrow=False, font=subtitle_font))
-        
+        fig.add_annotation(dict(
+            x = 1.15, y=-0.15,
+            xref="paper",yref="paper", showarrow=False,
+            text = "aiNarabic.ai<br>Data Source : OCHA",
+            font=dict(
+                        size=10,
+                        color="#279EFF"
+
+                    ),align="left"
+        ))
+       
     def _set_colorbar(self):
         colorbar = dict(
             title=self.choice.value,
@@ -171,7 +183,6 @@ class HeatmapPlot:
         return colorbar
 
     def update_layout(self, fig, max_value):
-        title_font = dict(family="Courier New, monospace", size=18, color="#04364A")
         fig.update_layout(
             title={
                 'text': f'Palestine-Israeli Conflict {self.choice.value} 2000 - 2023',
@@ -179,14 +190,22 @@ class HeatmapPlot:
                 'y': 0.95,
                 'xanchor': 'center',
                 'yanchor': 'top',
-                'font': title_font,
+                'font': {
+                    'size': 24,
+                   # 'color': self.colors[2],
+                    'family': "bold"
+                   
+                },
+               
                 'pad': {'b': 10}
             },
+            yaxis1=dict(zeroline=False,tickfont=dict(size=8,color = "#3F1D38")),
+            yaxis2=dict(zeroline=False,tickfont=dict(size=8,color = "#3F1D38")),
+
             width=1000, height=800,
             hovermode='closest',
-            xaxis1=dict(zeroline=False, scaleanchor="y", constrain="domain"),
-            xaxis2=dict(zeroline=False, scaleanchor="y", constrain="domain"),
-            yaxis=dict(zeroline=False),
+            
+            xaxis2=dict(zeroline=False,tickangle=-90,tickfont=dict(size=8,color = "#3F1D38"), constrain="domain"),
             coloraxis=dict(colorscale=self.cmap, cmin=0, cmax=max_value, colorbar=self._set_colorbar()),
             margin=dict(l=300, t=100, b=100)
         )
@@ -197,13 +216,14 @@ class HeatmapPlot:
         fig = self.create_heatmap(data, vars)
         if savefilename is not None:
             if self.library == 'sns':
-                plt.savefig(f'{savefilename}.pdf', transparent=True, bbox_inches='tight', pad_inches=0)
+                plt.savefig(f'{savefilename}sns.pdf', transparent=True, bbox_inches='tight', pad_inches=0)
             elif self.library == 'go':
-                pio.write_html(fig, f'{savefilename}')
+                fig.write_html(f'{savefilename}go.html')
         fig.show()
 
-if __name__ == "__main__":
-    df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-    choice = Choice.Injuries
-    heatmap = HeatmapPlot(df = df, choice= choice, library = "go", cmap = "ice_r")
-    heatmap.show(savefilename="goheatmap")
+#if __name__ == "__main__":
+  #  df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
+  #  choice = Choice.Fatalities
+  #  save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\Fheatmap"
+  #  heatmap = HeatmapPlot(df = df, choice= choice, library = "go", cmap = "turbid")  #tempo go #magma_r rocket_r sns
+  #  heatmap.show()

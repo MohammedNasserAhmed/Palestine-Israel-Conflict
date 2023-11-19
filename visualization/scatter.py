@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 import json
 import plotly.io as pio
 import pandas as pd
@@ -7,25 +6,26 @@ import math
 import time
 import plotly.express as px
 from typing import List 
-from pydantic import BaseModel, validator, Field
 import logging
-import matplotlib.patches as patches
-
+from itertools import combinations
 
 class Config:
     """
     Config class holds the configuration settings for the visualization.
     """
     paper_bgcolor: str = '#F1EFEF'
-    colors: List[str] = ["#BCA37F", "#113946", '#053B50']
-    title: str = "Human Cost of Palestine-Israel Conflict From 2000 To Oct-2023"
+    colors: List[str] = ["#BCA37F", "#113946", '#053B50',"#FE0000"]
+    title: str = "Human Cost of Palestine-Israel Conflict<br>(2000 To Oct-2023)"
+    title_size = float = 22
     plot_bgcolor: str = 'white'
     xgridcolor: str = "#F1EFEF"
     ygridcolor: str = "#F1EFEF"
-    width: int = 1000
-    height: int = 500
+    axiseslabel_size : float = 14
+    axisestick_size : float = 9
+    width: int = 800
+    height: int = 450
     signature: str = "aiNarabic.ai<br>Data Source : OCHA"
-    
+    signature_color = '#279EFF'
     @classmethod
     def from_dict(cls, config_dict):
         """
@@ -41,12 +41,16 @@ class Config:
         config.paper_bgcolor = config_dict.get('paper_bgcolor', '#F1EFEF')
         config.colors = config_dict.get('colors', ["#BCA37F", "#113946", '#053B50'])
         config.title = config_dict.get('title', "Human Cost of Palestine-Israel Conflict From 2000 To Oct-2023")
+        config.title = config_dict.get('title_size', 22)
         config.plot_bgcolor = config_dict.get('plot_bgcolor', 'white')
         config.xgridcolor = config_dict.get('xgridcolor', "#F1EFEF")
         config.ygridcolor = config_dict.get('ygridcolor', "#F1EFEF")
+        config.axiseslabel_size = config_dict.get('axiseslabel_size', 16)
+        config.axisestick_size = config_dict.get('axisestick_size', 12)
         config.width = config_dict.get('width', 1000)
         config.height = config_dict.get('height', 500)
         config.signature = config_dict.get('signature', "aiNarabic.ai<br>Data Source : OCHA")
+        config.signature_color = config_dict.get('signature_color', "#279EFF")
         return config
         
     @classmethod
@@ -94,7 +98,9 @@ class Histogram:
         self.variable = variable
         self.config = config
         
-      
+    
+
+    
 
     def create_histogram(self):
         """
@@ -116,7 +122,7 @@ class Histogram:
             title={
                 'text': self.config.title,
                 'font': {
-                    'size': 24,
+                    'size': self.config.title_size,
                     'color': self.config.colors[2],
                     'family': 'bold'
                    
@@ -130,11 +136,13 @@ class Histogram:
             xaxis=dict(
                 title={
                     'font': {
-                        'size': 18,
+                        'size': self.config.axiseslabel_size,
                         'color': self.config.colors[2],
                         'family': 'bold'
                     }
                 },
+                tickfont=dict(size=self.config.axisestick_size,
+                              color = "#3F1D38"),
                 gridcolor=self.config.xgridcolor,
                 gridwidth=3,
                 tickangle=-45,
@@ -143,11 +151,13 @@ class Histogram:
             yaxis=dict(
                 title={
                     'font': {
-                        'size': 18,
+                        'size': self.config.axiseslabel_size,
                         'color': self.config.colors[2],
                         'family': 'bold'
                     }
                 },
+                tickfont=dict(size=self.config.axisestick_size,
+                              color = "#3F1D38"),
                 gridcolor=self.config.ygridcolor,
                 gridwidth=3,
                 tickangle=-45,
@@ -159,7 +169,10 @@ class Histogram:
             width=self.config.width,
             height=self.config.height
         )
+        #fig.update_yaxes(tickvals=[1000, 3000, 5000, 7000, 9000, 11000, 13000, 15000])
+
         return fig
+
     def create_annotations(self, fig): 
         """
         Create annotations for the given figure.
@@ -179,10 +192,10 @@ class Histogram:
             },
             {
                 'text':self.config.signature,
-                'color': '#279EFF',
+                'color': self.config.signature_color,
                 'font_size': 10,
-                'x': 1.08,
-                'y': -0.1,
+                'x': 1.1,
+                'y': 0.0,
                 'bg_color': '#F1EFEF'
             }
         ]
@@ -225,12 +238,14 @@ class Histogram:
 
 
 
-class PXScatter(BaseModel):
-    df: List[dict] = Field(..., description="Input data should be a dictionary")
-    var: str =  Field(..., description="Input variable should be a string and a column in data")
-    title :str = Field(..., description="Figure title")
-    @validator('df')
-    def validate_df(cls, df):
+class PXScatter:
+    def __init__(self, df : pd.DataFrame, var : str, config : Config):
+        self.df = self.validate_df(df)
+        self.var = self.validate_var(var, self.df)
+        self.config = config
+
+    @staticmethod
+    def validate_df(df):
         if not isinstance(df, list):
             raise ValueError('df must be a dictionary')
         for item in df:
@@ -239,28 +254,15 @@ class PXScatter(BaseModel):
         df = pd.DataFrame(df)
         return df
 
-    @classmethod
-    @validator('var')
-    def validate_var(cls, var: str, df: pd.DataFrame)-> str:
-        """
-        Validates the input variable.
-
-        Args:
-            var (str): The input variable to be validated.
-
-        Returns:
-            str: The validated input variable.
-
-        Raises:
-            TypeError: If the input variable is not a string.
-            KeyError: If the input variable is not a column in the dataframe.
-        """
+    @staticmethod
+    def validate_var(var, df):
         if not isinstance(var, str):
             raise TypeError('The input variable must be a string.')
         if var not in df.columns:
             raise KeyError('The input variable must be a column in the dataframe.')
         return var
 
+    
     def log_execution_time(func):
         def wrapper(*args, **kwargs):
             logging.info(f'Starting to execute {func.__name__}')
@@ -274,7 +276,13 @@ class PXScatter(BaseModel):
 
     @log_execution_time
     def show(self, save_filename: str = None):
+        """_summary_
 
+        Args:
+            save_filename (str, optional): 
+            _description_
+            To set path to html-file-name that used to save figure, Defaults to None.
+        """
         try:
             logging.info('Starting to plot scatter')
             if self.var.split()[1] == "Killed":
@@ -323,25 +331,25 @@ class PXScatter(BaseModel):
                 yaxis=dict(
                     showticklabels=False, showgrid=False
                 ),
-                width=800,  # Set the width of the figure
-                height=450,
+                width=self.config.width,  # Set the width of the figure
+                height=self.config.height,
                 
-                annotations =[dict(text = "aiNarabic.ai<br>Data Source : OCHA",
+                annotations =[dict(text = self.config.signature,
                             x = 1.15, y=-0.25,
                             xref="paper",yref="paper",
                             showarrow=False,
                             font=dict(
                                 size=10,
-                                color="#279EFF"
+                                color=self.config.signature_color
 
                             ),align="left"),
                              
-                              dict(text = self.title,
+                              dict(text = self.config.title,
                             x = 0.5, y=1.25,
                             xref="paper",yref="paper",
                             showarrow=False,
                             font=dict(
-                                size=24,
+                                size=self.config.title_size,
                                 color="#872341",
                                
                                 family = "bold",
@@ -364,15 +372,13 @@ class PXScatter(BaseModel):
 
 
 class Bubbles:
-    def __init__(self, data, title = None,
-                 colors : List[str] = ['#088395','#E55604','#04364A']):
+    def __init__(self, data : pd.DataFrame, config:Config):
         """
         Initialize the class with data, colors, and optional required columns.
 
         Args:
             data (pd.DataFrame): The input data as a pandas DataFrame.
-            colors (list): The list of colors.
-            required_columns (list, optional): The list of required columns. Defaults to ['Year', 'Month', 'Deaths', 'Injuries', 'Group'].
+          
         """
         if not isinstance(data, pd.DataFrame):
             raise TypeError("Data must be a pandas DataFrame")
@@ -382,18 +388,7 @@ class Bubbles:
             raise ValueError("Data contains NaN values")
 
         self.data = data
-
-        if not isinstance(colors, list):
-            raise TypeError("Colors must be a list")
-        if len(colors) < 2:
-            raise ValueError("Colors must have at least 2 elements")
-        if not all(isinstance(color, str) for color in colors):
-            raise ValueError("All elements in colors must be strings")
-
-        self.colors = colors 
-
-        
-        self.title = title 
+        self.config = config
         self.create_text_and_sizes()
         
     def create_text_and_sizes(self):
@@ -426,12 +421,12 @@ class Bubbles:
             x=group['Fatalities'], y=group['Injuries'],
             name=group_name, text=group['text'],
             marker_size=group['size'],
-            marker_color=self.colors[2] if group_name == 'Israel' else self.colors[1]
+            marker_color=self.config.colors[2] if group_name == 'Israel' else self.config.colors[3]
         ) for group_name, group in groups_data.items()])
 
         # Tune marker appearance and layout
         fig.update_traces(mode='markers', marker=dict(sizemode='area',
-                                                      sizeref=sizeref, line_width=0.5))
+                                                      sizeref=sizeref, line_width=0.7))
         fig.update_xaxes(showline=False, overwrite=False)
 
         fig.update_layout(
@@ -441,10 +436,11 @@ class Bubbles:
                     'text': self.data.columns[3].upper(),
                     'font': {
                         'size': 12,
-                        'color': self.colors[2],
+                        'color': self.config.colors[2],
                         'family': 'bold'
                     }
                 },
+                tickfont=dict(size=self.config.axisestick_size),
                 gridcolor='#F1EFEF',
                 type='log',
                 gridwidth=3,
@@ -455,44 +451,44 @@ class Bubbles:
                     'text': self.data.columns[2].upper(),
                     'font': {
                         'size': 12,
-                        'color': self.colors[2],
+                        'color': self.config.colors[2],
                         'family': 'bold'
                     }
                 },
+                tickfont=dict(size=self.config.axisestick_size),
                 gridcolor='#F1EFEF',
                 gridwidth=3,
                 tickangle=-45
                 
             ),
-             annotations =[dict(text = "aiNarabic.ai<br>Data Source : OCHA",
+             annotations =[dict(text = self.config.signature,
                             x = 1.2, y=-0.25,
                             xref="paper",yref="paper",
                             showarrow=False,
                             font=dict(
                                 size=10,
-                                color="#279EFF"
+                                color=self.config.signature_color
 
                             ),align="left"),
                            
-                            dict(text = self.title,
+                            dict(text = self.config.title,
                             x = 0.5, y=1.3,
                             xref="paper",yref="paper",
                             showarrow=False,
-                            #bgcolor = "",
                             font=dict(
-                                size=24,
-                                color=self.colors[2],
+                                size=self.config.title_size,
+                                color=self.config.colors[2],
                                
                                 family = "bold",
 
                             ),
                             align="center")],
 
-            paper_bgcolor='#F1EFEF',
-            plot_bgcolor='white',
+            paper_bgcolor=self.config.paper_bgcolor,
+            plot_bgcolor=self.config.plot_bgcolor,
 
-            width=800,
-            height=450  #
+            width=self.config.width,
+            height=self.config.height  #
 
         )
         
@@ -512,10 +508,10 @@ class Bubbles:
             if not save_filename.endswith('.html'):
                 raise ValueError("Invalid filename. Filename must be end with '.html'")
         
-            pio.write_html(fig, file=save_filename)
+            fig.write_html(save_filename)
         fig.show()
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     # ============== Histogram
     #data = pd.read_excel("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.xlsx")
     #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs"
@@ -525,17 +521,19 @@ if __name__ == "__main__":
     #    scatter_plot = Histogram(data=data,variable = col, config=config)
     #    scatter_plot.show(f"{save_filename}\{path}.html")
     # ============== PXScatter
-    df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-    save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs"
-    data=df.to_dict(orient="records")
-    title = "Human Cost of Palestine-Israel Conflict From 2000 To Oct-2023"
-    paths = ["Scatter_ps_i","Scatter_ps_k","Scatter_il_i",'Scatter_il_k']
-    for col, path in zip(df.columns.tolist()[2:],paths):
-        scatter_plot = PXScatter(df=data,var = col, title=title)
-        scatter_plot.show(f"{save_filename}\{path}.html")
+    #df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
+    #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs"
+    #data=df.to_dict(orient="records")
+    #title = "Human Cost of Palestine-Israel Conflict From 2000 To Oct-2023"
+    #paths = ["Scatter_ps_i","Scatter_ps_k","Scatter_il_i",'Scatter_il_k']
+    #config=Config()
+    #for col, path in zip(df.columns.tolist()[2:],paths):
+    #    scatter_plot = PXScatter(df=data,var = col, config=config)
+    #    scatter_plot.show(f"{save_filename}\{path}.html")
     # ============== Bubbles
     #data = pd.read_excel("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.xlsx")
     #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\Bubbles.html"
     #title = "Human Cost of Palestine-Israel Conflict<br>2000 To Oct-2023"
-    #scatter_plot = Bubbles(data=data, title=title)
-    #scatter_plot.show(save_filename)
+    #config=Config()
+    #scatter_plot = Bubbles(data=data, config=config)
+    #scatter_plot.show()
