@@ -60,7 +60,7 @@ In summary, the methodology used in this project involved several steps, includi
 
 The visualizations created in this project provide a comprehensive view of the conflict and its impact on human lives. Some of the visualizations created include:
 * Heatmaps
-![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/987ce6ab131d8a4c6e05ed7bd243361dbb74ea25/outputs/Fheatmapgo.html?raw=true)
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/987ce6ab131d8a4c6e05ed7bd243361dbb74ea25/outputs/Fheatmapgo.html?raw=false)
 
 
   
