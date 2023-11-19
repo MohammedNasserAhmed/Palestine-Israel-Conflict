@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+import json
 import plotly.io as pio
 import pandas as pd
 import plotly.graph_objects as go
@@ -10,10 +12,60 @@ import logging
 import matplotlib.patches as patches
 
 
+class Config:
+    """
+    Config class holds the configuration settings for the visualization.
+    """
+    paper_bgcolor: str = '#F1EFEF'
+    colors: List[str] = ["#BCA37F", "#113946", '#053B50']
+    title: str = "Human Cost of Palestine-Israel Conflict From 2000 To Oct-2023"
+    plot_bgcolor: str = 'white'
+    xgridcolor: str = "#F1EFEF"
+    ygridcolor: str = "#F1EFEF"
+    width: int = 1000
+    height: int = 500
+    signature: str = "aiNarabic.ai<br>Data Source : OCHA"
+    
+    @classmethod
+    def from_dict(cls, config_dict):
+        """
+        Create an instance of Config from a dictionary.
+        
+        Args:
+            config_dict (dict): Dictionary containing the configuration settings.
+        
+        Returns:
+            Config: An instance of Config with the provided configuration settings.
+        """
+        config = cls()
+        config.paper_bgcolor = config_dict.get('paper_bgcolor', '#F1EFEF')
+        config.colors = config_dict.get('colors', ["#BCA37F", "#113946", '#053B50'])
+        config.title = config_dict.get('title', "Human Cost of Palestine-Israel Conflict From 2000 To Oct-2023")
+        config.plot_bgcolor = config_dict.get('plot_bgcolor', 'white')
+        config.xgridcolor = config_dict.get('xgridcolor', "#F1EFEF")
+        config.ygridcolor = config_dict.get('ygridcolor', "#F1EFEF")
+        config.width = config_dict.get('width', 1000)
+        config.height = config_dict.get('height', 500)
+        config.signature = config_dict.get('signature', "aiNarabic.ai<br>Data Source : OCHA")
+        return config
+        
+    @classmethod
+    def from_json(cls, json_file):
+        """
+        Create an instance of Config from a JSON file.
+        
+        Args:
+            json_file (str): Path to the JSON file containing the configuration settings.
+        
+        Returns:
+            Config: An instance of Config with the configuration settings from the JSON file.
+        """
+        with open(json_file, 'r') as file:
+            config_dict = json.load(file)
+        return cls.from_dict(config_dict)
 class Histogram:
-    def __init__(self, data: pd.DataFrame, variable: str, 
-                 colors: List[str] = ["#BCA37F", "#113946", '#053B50'],
-                 title:str=None):
+    def __init__(self, data: pd.DataFrame, variable: str,
+                 config:Config):
         """
         Initialize the Histogram class.
 
@@ -40,38 +92,32 @@ class Histogram:
         if not isinstance(variable, str):
             raise TypeError("Variable Input should be a string")
         self.variable = variable
-        if not isinstance(colors, list):
-            raise TypeError("Colors must be a list")
-        if len(colors) < 2:
-            raise ValueError("Colors must have at least 2 elements")
-        if not all(isinstance(color, str) for color in colors):
-            raise ValueError("All elements in colors must be strings")
+        self.config = config
+        
+      
 
-        self.colors = colors
-        self.title = title
-
-    def create_histogram(self, width, height):
+    def create_histogram(self):
         """
         Create a histogram plot using Plotly Express.
 
         Raises:
         - IndexError: If self.colors has less than 2 elements.
         """
-        columns = ["Year", self.variable, "Group"]
-        if len(self.colors) >= 2:
-            color_discrete_sequence = self.colors[:2]
+        columns = [self.data.columns[0], self.variable, self.data.columns[4]]
+        if len(self.config.colors) >= 2:
+            color_discrete_sequence = self.config.colors[:2]
         else:
-            color_discrete_sequence = self.colors
+            color_discrete_sequence = self.config.colors
         fig = px.histogram(data_frame=self.data[columns], x="Year", y=self.variable, color="Group",
                            hover_data=columns, color_discrete_sequence=color_discrete_sequence)
-        self._create_annotations(fig)
+        self.create_annotations(fig)
         fig.update_layout(
             
             title={
-                'text': self.title,
+                'text': self.config.title,
                 'font': {
                     'size': 24,
-                    'color': self.colors[2],
+                    'color': self.config.colors[2],
                     'family': 'bold'
                    
                 },
@@ -85,11 +131,11 @@ class Histogram:
                 title={
                     'font': {
                         'size': 18,
-                        'color': self.colors[2],
+                        'color': self.config.colors[2],
                         'family': 'bold'
                     }
                 },
-                gridcolor='#F1EFEF',
+                gridcolor=self.config.xgridcolor,
                 gridwidth=3,
                 tickangle=-45,
                 automargin=True
@@ -98,75 +144,91 @@ class Histogram:
                 title={
                     'font': {
                         'size': 18,
-                        'color': self.colors[2],
+                        'color': self.config.colors[2],
                         'family': 'bold'
                     }
                 },
-                gridcolor='#F1EFEF',
+                gridcolor=self.config.ygridcolor,
                 gridwidth=3,
                 tickangle=-45,
                 automargin=True
                 
             ),
-            paper_bgcolor='#F1EFEF',
-            plot_bgcolor='white',
-            width=width,
-            height=height
+            paper_bgcolor=self.config.paper_bgcolor,
+            plot_bgcolor=self.config.plot_bgcolor,
+            width=self.config.width,
+            height=self.config.height
         )
-        
         return fig
-    def _create_annotations(self, fig): 
+    def create_annotations(self, fig): 
         """
         Create annotations for the given figure.
-
+   
         Args:
             fig (go.Figure): The figure to add annotations to.
         """
-        texts = ["aiNarabic", f"{self.variable}"]
-        colors = ['lightgray', '#3F1D38']  
-        font_sizes = [14,19]  
-        xs =[0.045,0.5]
-        ys=[1.07,1.06]
-        bc =["#F1EFEF",'white']
-        for text, color, font_size, x, y, bg_color in zip(texts, colors, font_sizes, xs, ys, bc):
+        variable_text = f"{self.variable}".upper()
+        annotations = [
+            {
+                'text': variable_text,
+                'color': '#3F1D38',
+                'font_size': 16,
+                'x': 0.5,
+                'y': 1.06,
+                'bg_color': 'white'
+            },
+            {
+                'text':self.config.signature,
+                'color': '#279EFF',
+                'font_size': 10,
+                'x': 1.08,
+                'y': -0.1,
+                'bg_color': '#F1EFEF'
+            }
+        ]
+        for annotation in annotations:
             text_annotation = go.layout.Annotation(
-                x=x,
-                y=y,
+                x=annotation['x'],
+                y=annotation['y'],
                 xref='paper',
                 yref='paper',
                 xanchor='center',
                 yanchor='top',
                 showarrow=False,
-                text=text,
-                align='center',
-                font_size=font_size,
-                font_color=color,
-                bgcolor=bg_color
+                text=annotation['text'],
+                align='left',
+                font_size=annotation['font_size'],
+                font_color=annotation['color'],
+                bgcolor=annotation['bg_color']
             )
             fig.add_annotation(text_annotation)
 
                 
-    def show(self, width: int = 1000, 
-             height: int = 500, 
-             save_filename:str = None):
+    def show(self, save_filename: str = None):
         """
         Show the histogram plot.
 
         Parameters:
-        - width (int): The width of the histogram plot.
-        - height (int): The height of the histogram plot.
+        - save_filename (str): The filename to save the plot as HTML.
+
+        Returns:
+        - str: A success message if the plot is successfully saved as HTML.
         """
-        fig = self.create_histogram(width, height)
-        if save_filename is not None:
-            pio.write_html(fig, file=save_filename)
-        fig.show()
+        fig = self.create_histogram()
+        if save_filename is not None and isinstance(save_filename, str) and save_filename.endswith(".html"):
+            try:
+                fig.write_html(save_filename)
+                fig.show()
+            except Exception as e:
+                return f"Error saving plot as HTML: {str(e)}"
+        
 
 
 
 class PXScatter(BaseModel):
     df: List[dict] = Field(..., description="Input data should be a dictionary")
     var: str =  Field(..., description="Input variable should be a string and a column in data")
-    title : str =Field(..., fdescription = "Tile of total project")
+    title :str = Field(..., description="Figure title")
     @validator('df')
     def validate_df(cls, df):
         if not isinstance(df, list):
@@ -251,7 +313,8 @@ class PXScatter(BaseModel):
                     text=label.upper(),
                     font=dict(size=16, color='#0039A6'),
                     x=0.5,
-                    y=0.85
+                    y=0.81
+                    
                 ),
                 xaxis=dict(
                     
@@ -261,14 +324,15 @@ class PXScatter(BaseModel):
                     showticklabels=False, showgrid=False
                 ),
                 width=800,  # Set the width of the figure
-                height=500,
-                annotations =[dict(text = "aiNarabic.ai<br>DATA SOURCE : https://www.ochaopt.org/data/casualties",
-                            y = 0.0, x=1.0,
+                height=450,
+                
+                annotations =[dict(text = "aiNarabic.ai<br>Data Source : OCHA",
+                            x = 1.15, y=-0.25,
                             xref="paper",yref="paper",
                             showarrow=False,
                             font=dict(
-                                size=14,
-                                color="gray"
+                                size=10,
+                                color="#279EFF"
 
                             ),align="left"),
                              
@@ -276,7 +340,6 @@ class PXScatter(BaseModel):
                             x = 0.5, y=1.25,
                             xref="paper",yref="paper",
                             showarrow=False,
-                            #bgcolor = "",
                             font=dict(
                                 size=24,
                                 color="#872341",
@@ -286,12 +349,10 @@ class PXScatter(BaseModel):
                             ),align="center")
                               ]
             )
-            # Define the rectangle data points
             
 
             # Create a figure
             fig = go.Figure(data=[trace], layout=layout)
-            # Show the figure
             if  save_filename is not None :
                 fig.write_html(save_filename)
             fig.show()
@@ -379,7 +440,7 @@ class Bubbles:
                 title={
                     'text': self.data.columns[3].upper(),
                     'font': {
-                        'size': 14,
+                        'size': 12,
                         'color': self.colors[2],
                         'family': 'bold'
                     }
@@ -393,7 +454,7 @@ class Bubbles:
                 title={
                     'text': self.data.columns[2].upper(),
                     'font': {
-                        'size': 14,
+                        'size': 12,
                         'color': self.colors[2],
                         'family': 'bold'
                     }
@@ -403,15 +464,16 @@ class Bubbles:
                 tickangle=-45
                 
             ),
-             annotations =[dict(text = "aiNarabic.ai",
-                            x = 0.0, y=1.08,
+             annotations =[dict(text = "aiNarabic.ai<br>Data Source : OCHA",
+                            x = 1.2, y=-0.25,
                             xref="paper",yref="paper",
                             showarrow=False,
                             font=dict(
-                                size=14,
-                                color="lightgray"
+                                size=10,
+                                color="#279EFF"
 
                             ),align="left"),
+                           
                             dict(text = self.title,
                             x = 0.5, y=1.3,
                             xref="paper",yref="paper",
@@ -423,7 +485,8 @@ class Bubbles:
                                
                                 family = "bold",
 
-                            ),align="center")],
+                            ),
+                            align="center")],
 
             paper_bgcolor='#F1EFEF',
             plot_bgcolor='white',
@@ -453,9 +516,26 @@ class Bubbles:
         fig.show()
 
 if __name__ == "__main__":
-    data = pd.read_excel("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.xlsx")
-    save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\Bubbles.html"
-    #data=data.to_dict(orient="records")
-    title = "Human Cost of Palestine-Israel Conflict <br> 2000 To Oct-2023"
-    scatter_plot = Bubbles(data=data, title=title)
-    scatter_plot.show(save_filename)
+    # ============== Histogram
+    #data = pd.read_excel("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.xlsx")
+    #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs"
+    #paths = ["histogramI","histogramF"]
+    #config = Config()
+    #for col, path in zip(data.columns.tolist()[2:4],paths):
+    #    scatter_plot = Histogram(data=data,variable = col, config=config)
+    #    scatter_plot.show(f"{save_filename}\{path}.html")
+    # ============== PXScatter
+    df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
+    save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs"
+    data=df.to_dict(orient="records")
+    title = "Human Cost of Palestine-Israel Conflict From 2000 To Oct-2023"
+    paths = ["Scatter_ps_i","Scatter_ps_k","Scatter_il_i",'Scatter_il_k']
+    for col, path in zip(df.columns.tolist()[2:],paths):
+        scatter_plot = PXScatter(df=data,var = col, title=title)
+        scatter_plot.show(f"{save_filename}\{path}.html")
+    # ============== Bubbles
+    #data = pd.read_excel("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.xlsx")
+    #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\Bubbles.html"
+    #title = "Human Cost of Palestine-Israel Conflict<br>2000 To Oct-2023"
+    #scatter_plot = Bubbles(data=data, title=title)
+    #scatter_plot.show(save_filename)
