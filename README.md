@@ -83,6 +83,10 @@ The analysis of the dataset revealed several key insights into the human cost of
 
 Overall, the "Human Cost of Palestine-Israel Conflict 2000 - 2023" project provides a comprehensive analysis of the conflict and its impact on human lives. The visualizations created in this project help people understand the situation and read the conflict from a more insightful view.
 
+## :checkered_flag: Data Source ##
+
+<a href="https://www.ochaopt.org/data/casualties" target="_blank">OCHA</a>
+
 ## :memo: License ##
 
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
