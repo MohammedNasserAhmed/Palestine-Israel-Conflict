@@ -20,7 +20,7 @@ class Choice(Enum):
 
 class Preprocessor:
     
-    def reindex_monthcols(self, data: pd.DataFrame, months: List[str], rename: bool=False) -> pd.DataFrame:
+    def reindex_monthcols(self, data: pd.DataFrame, months: List[str], rename = False) -> pd.DataFrame:
         """
         Reindex the columns of the given DataFrame using the provided list of months.
     
@@ -41,13 +41,12 @@ class Preprocessor:
     def get_data(self, data, choice, months):
         column_mapping = {
             Choice.Injuries: ["Palestinians Injuries", "Israelis Injuries"],
-            Choice.Fatalities: ["Palestinians Killed", "Israelis Killed"]
+            Choice.Fatalities: ["Palestinians Fatalities", "Israelis Fatalities"]
         }
         column_names = column_mapping[choice]
 
-        grouped_data = [self.reindex_monthcols(data.groupby(["Year", "Month"])[var].sum().sort_index(ascending=True).unstack(level=1).astype(int), months, 
+        grouped_data = [self.reindex_monthcols(data.groupby(["Year", "Month"])[var].sum().sort_index(ascending=True).unstack(level=1).fillna(0).astype(int), months, 
                                                rename=True).rename_axis(index=None, columns=None) for var in column_names]
-
         return grouped_data, column_names
 
 
@@ -94,7 +93,7 @@ class HeatmapPlot:
         vmax = max(data[0].max().max(), data[1].max().max())
         fig, axn = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(8, 8))
         cbar_ax = fig.add_axes([.90, .3, .03, .4])
-        fig.suptitle("Human Cost of Palestine-Israel Conflict (2000 To Oct-2023)", 
+        fig.suptitle("Human Cost of Palestine-Israel Conflict (2000 To April-2024)", 
                      size=18, x=0.5)
         for (i, ax), data_item, var in zip(enumerate(axn.flat), data, vars):
             heatmap_array = data_item.values.T
@@ -111,7 +110,7 @@ class HeatmapPlot:
         self._customize_colorbar(heatmap, cbar_ax)
         fig.text(-0.07, 0.5, 'MONTH', fontsize=10, color='#2E4F4F', rotation=0, va='center')
         fig.text(0.45, -0.02, 'YEAR', fontsize=10, color='#2E4F4F', rotation=0, va='center')
-        fig.text(0.9, 0.0, 'aiNarabic.ai\nData Source : OCHA', fontsize=8, color='#279EFF', rotation=0, va='center')
+        fig.text(0.9, 0.0, 'aiNarabic.ai', fontsize=8, color='#279EFF', rotation=0, va='center')
         fig.tight_layout(rect=[0, 0, .9, 1])
         plt.subplots_adjust(hspace=0.1)
         return fig
@@ -164,7 +163,7 @@ class HeatmapPlot:
         fig.add_annotation(dict(
             x = 1.15, y=-0.15,
             xref="paper",yref="paper", showarrow=False,
-            text = "aiNarabic.ai<br>Data Source : OCHA",
+            text = "aiNarabic.ai",
             font=dict(
                         size=10,
                         color="#279EFF"
@@ -185,7 +184,7 @@ class HeatmapPlot:
     def update_layout(self, fig, max_value):
         fig.update_layout(
             title={
-                'text': f'Palestine-Israeli Conflict {self.choice.value} 2000 - 2023',
+                'text': f'Palestine-Israeli Conflict {self.choice.value} 2000 - April 2024',
                 'x': 0.6,
                 'y': 0.95,
                 'xanchor': 'center',
@@ -221,9 +220,3 @@ class HeatmapPlot:
                 fig.write_html(f'{savefilename}go.html')
         fig.show()
 
-#if __name__ == "__main__":
-  #  df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-  #  choice = Choice.Fatalities
-  #  save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\Fheatmap"
-  #  heatmap = HeatmapPlot(df = df, choice= choice, library = "go", cmap = "turbid")  #tempo go #magma_r rocket_r sns
-  #  heatmap.show()
