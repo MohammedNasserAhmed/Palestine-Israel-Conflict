@@ -263,7 +263,7 @@ class PieCharts:
             raise ValueError("df cannot be empty")
         if choice == Choice.Injuries and not all(col in df.columns for col in ["Palestinians Injuries", "Israelis Injuries"]):
             raise ValueError("Missing necessary columns for choice 'Injuries'")
-        if choice == Choice.Fatalities and not all(col in df.columns for col in ["Palestinians Killed", "Israelis Killed"]):
+        if choice == Choice.Fatalities and not all(col in df.columns for col in ["Palestinians Fatalities", "Israelis Fatalities"]):
             raise ValueError("Missing necessary columns for choice 'Fatalities'")
         self.df = df
         self.choice = choice
@@ -275,7 +275,7 @@ class PieCharts:
     def preprocess_data(self):
         columns_mapping = {
             "Injuries": ["Palestinians Injuries", "Israelis Injuries"],
-            "Fatalities": ["Palestinians Killed", "Israelis Killed"]
+            "Fatalities": ["Palestinians Fatalities", "Israelis Fatalities"]
         }
         cols = columns_mapping[self.choice.value]
         df = self.df.groupby(["Year"])[cols].sum().sort_index(ascending=True)
@@ -430,7 +430,7 @@ class PieCharts:
 
         fig.update_traces(textposition='inside')
         fig.update_layout(
-             annotations =[dict(text = "aiNarabic.ai<br>M. N. Gaber<br>abunasseredu@gmail.com",
+             annotations =[dict(text = "aiNarabic.ai",
                             x = 0.0, y=1.5,
                             showarrow=False,
                             font=dict(

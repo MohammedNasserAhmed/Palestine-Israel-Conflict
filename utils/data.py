@@ -49,7 +49,7 @@ class Loader:
 
         return df
 
-    def read_xsls(self, path, header=None, index_col=None, usecols=None):
+    def read_excel(self, path, header=None, index_col=None, usecols=None):
         """
         Load an Excel file and print its top 5 observations.
 

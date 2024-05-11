@@ -150,13 +150,19 @@ class StackBar:
         p.y_range.start = 1
         p.x_range.range_padding = 0.1
         p.xgrid.grid_line_color = None
-        p.axis.minor_tick_line_color = None
+        p.axis.minor_tick_line_color = "red"
         p.outline_line_color = None
         p.legend.location = "top_left"
         p.legend.orientation = "horizontal"
+        p.legend.label_text_font_size = "8pt"  # Adjust label font size
+        p.legend.title_text_font_size = "8pt"  # Adjust title font size (optional)
+        p.legend.title_text_font_style = "bold" 
+        p.legend.margin=0
+        p.legend.padding=3
+        p.legend.glyph_height =12
         p.background_fill_color = "#D0D4CA"
         p.title.text = self.title
-        p.title.text_font_size = "16pt"
+        p.title.text_font_size = "15pt"
         p.title.text_color = colors[0]
         p.title.background_fill_color = "white"
         p.title.text_line_height = 20
@@ -170,8 +176,9 @@ class StackBar:
         p.xaxis.major_label_text_font_size="10.5px"
         p.xaxis.axis_line_color="white"
         p.xaxis.axis_line_width=1
-        if self.var.find("Killed") != -1: 
+        if self.var.find("Fatalities") != -1: 
             p.yaxis.axis_label="Fatalities"
+            
         else :
             p.yaxis.axis_label="Injuries"
         p.yaxis.major_label_orientation = 45
@@ -188,7 +195,7 @@ class StackBar:
         show(p)
        
    
-    def show_plot(self, height=500, width=1100, color_palette=None, theme='contrast', output_file_name="stackedbar.html"):
+    def show_plot(self, height=500, width=1100, color_palette=None, theme='contrast'):
         """
         Show the plot with the specified parameters.
 
@@ -255,10 +262,10 @@ class vbar:
         self.y_label = y_label
         if self.y_label.split()[1] == "Killed": 
             self.label = "Fatalities"
-            self.title = f"{self.y_label.split()[0]} {self.label} per Year"
+            self.title = f"{self.y_label.split()[0]} {self.label} / Year"
         else:
             self.label = "Injuries"
-            self.title = f"{self.y_label.split()[0]} {self.label} per Year"
+            self.title = f"{self.y_label.split()[0]} {self.label} / Year"
         self.y_rotate = y_rotate
         self.figwidth = figwidth
         self.figheight = figheight
@@ -285,7 +292,7 @@ class vbar:
         self.annotate_bars(ax, counts, fsize)
         self.create_legend(fig, ax)
         self.add_arrows(fig, fsize)
-        self.save_and_show_figure(fsize, save_filename)
+        self.save_and_show_figure(save_filename)
 
     def create_bar_plot(self, counts, colors):
         return counts.plot(kind='bar', color=colors, alpha=0.9, 
@@ -294,7 +301,7 @@ class vbar:
 
     def create_figure(self,fsize):
         fig = plt.figure(figsize=(self.figwidth, self.figheight), layout="constrained")
-        fig.suptitle(self.title, fontsize=fsize+4, color=self.colors[2])
+        fig.suptitle(self.title, fontsize=fsize+1, color=self.colors[2])
         plt.style.use({'axes.facecolor': "#EEEEEE",
                 'figure.facecolor': "#F5F5F5"})
         return fig
@@ -302,15 +309,15 @@ class vbar:
     def set_labels(self, fig, ax, average, fsize):
         for spine in ax.spines.values():
             spine.set_linewidth(0)
-        ax.set_ylabel(self.label, fontsize=fsize, rotation=self.y_rotate, labelpad=30, color=self.colors[2])
-        ax.set_xlabel(self.var, fontsize=fsize, rotation=360, labelpad=30, color=self.colors[2])
-        ax.tick_params(axis='x', colors='#414A4C', rotation=45, length=1, width=1, labelsize=fsize-6)
-        ax.tick_params(axis='y', colors='#414A4C', rotation=45, length=1, width=1, labelsize=fsize-6)
-        fig.text(0.5, 0.9,f"Average of {self.y_label.split()[0]} {self.label} yearly : {round(average)}", 
-                    color=self.colors[3], fontweight='bold', fontsize=fsize-2, 
+        ax.set_ylabel(self.label, fontsize=fsize-4, rotation=self.y_rotate, labelpad=30, color=self.colors[2])
+        ax.set_xlabel(self.var, fontsize=fsize-4, rotation=360, labelpad=30, color=self.colors[2])
+        ax.tick_params(axis='x', colors='#414A4C', rotation=45, length=1, width=1, labelsize=fsize-7)
+        ax.tick_params(axis='y', colors='#414A4C', rotation=45, length=1, width=1, labelsize=fsize-7)
+        fig.text(0.87, 0.96,f"Average of {self.y_label.split()[0]} {self.label} yearly : {round(average)}", 
+                    color=self.colors[3], fontweight='bold', fontsize=fsize-6, 
                     va='center', ha="center")
-        fig.text(0.1,0.9,"aiNarabic.ai\nM. N. Gaber\nabunasseredu@gmail.com",
-                    color="lightgray", fontsize=fsize-2, 
+        fig.text(0.92,0.05,"aiNarabic.ai",
+                    color="gray", fontsize=fsize-6, 
                     verticalalignment='top')
 
     def annotate_bars(self, ax, counts, fsize):
@@ -321,12 +328,17 @@ class vbar:
 
     def create_legend(self,fig, ax):
         bc = self.colors
+        
         ax.scatter([], [], color=bc[0], marker='s')
         ax.scatter([], [], color=bc[1], marker='s')
-        leg = fig.legend(self.labels, bbox_to_anchor=(0.5, 0.8),  
+        leg = fig.legend(self.labels,loc="upper left",  
                          fancybox=True, ncol=2, labelspacing=1.5, framealpha=1, shadow=True, 
                          borderpad=1, frameon=True, edgecolor='black', facecolor='#FFFAF0')
-        
+        for label in leg.get_texts():
+            label.set_fontsize(7)  # Replace 'fontsize' with your desired size
+
+        # Adjust legend box size (optional)
+        leg.set_bbox_to_anchor((0.072, 1.015)) 
         leg.get_frame().set_linewidth(0)
 
     def add_arrows(self, fig, fsize):
@@ -347,7 +359,7 @@ class vbar:
                     size=fsize-3,bbox=bbox_props_shadows, zorder=0)
             x = x + 0.05
         
-    def save_and_show_figure(self, fsize, save_filename):
+    def save_and_show_figure(self, save_filename):
         if save_filename is not None : 
             plt.savefig(save_filename)
         plt.show()
@@ -535,7 +547,7 @@ class CustomizedBar(BaseModel):
        #================== flags ================
 
         X = [0.985*axx, 1.085*axx, 0.16*axx, 0.16*axx]
-        Y = [82, 82, 27, 20]
+        Y = [84.5, 84.5, 27, 20]
 
         def getImage(path, zoom = .07):
           return OffsetImage(plt.imread(path, format="png"), zoom=zoom)
@@ -543,8 +555,8 @@ class CustomizedBar(BaseModel):
           ab = AnnotationBbox(getImage(path), (x, y), frameon=False)
           ax.add_artist(ab)
 
-        ax.text(0.83*axx, 82, self.img_lbls[0][0], fontsize=14, verticalalignment='center', color='black')
-        ax.text(1.115*axx, 82, self.img_lbls[0][1], fontsize=14, verticalalignment='center', color='black')
+        ax.text(0.83*axx, 84.5, self.img_lbls[0][0], fontsize=14, verticalalignment='center', color='black')
+        ax.text(1.115*axx, 84.5, self.img_lbls[0][1], fontsize=14, verticalalignment='center', color='black')
         
         
         #===total deaths and injuries===
@@ -641,7 +653,9 @@ class CustomizedBar(BaseModel):
             logging.error(f"An error occurred while showing the plot: {str(e)}")
         else:
             logging.info("Plot shown")
+            
+            
+            
+
+
  
-
-
-
