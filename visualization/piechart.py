@@ -153,13 +153,13 @@ class PieChart:
                                             showarrow=False,
                                             font=dict(
                                                 size=13,
-                                                color="#B31312",
+                                                color=f'{self.colors[2]}',
 
                                             ),
                                             align="left"
                                         ),
                                     
-                                       dict(text = "aiNarabic.ai<br>M. N. Gaber<br>abunasseredu@gmail.com", 
+                                       dict(text = "aiNarabic.ai", 
 
                                             x = -0.1, y=1.5,
                                             showarrow=False,
@@ -269,7 +269,7 @@ class PieCharts:
         self.choice = choice
         self.colors = colors
         if title is None :
-            self.title = "<i>Human-Cost of the Palestine-Israel Conflict (2000 - 2023)</i>"
+            self.title = "<i>Human-Cost of the Palestine-Israel Conflict (2000 - April 2024)</i>"
         else:
             self.title = title
     def preprocess_data(self):
@@ -399,7 +399,7 @@ class PieCharts:
                 'xanchor': title_xanchor,
                 'yanchor': title_yanchor,
                 'font': {
-                    'color': "#6A9C89",
+                    'color': "#750E21",
                     'size': title_font_size,
                     'family': title_font_family
                 }
@@ -444,7 +444,7 @@ class PieCharts:
                             showarrow=False,
                             font=dict(
                                 size=24,
-                                color=self.colors[2]
+                                color=self.colors[0]
 
                             ),align="center"),
                            dict(text='Palestine', x=0.18, y=1.0, font_size=20, showarrow=True, font_color=self.colors[2]),
@@ -474,19 +474,3 @@ class PieCharts:
         """
         fig.show()
 
-
-#if __name__ == "__main__":
-
-    #df = pd.read_csv("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")
-    #title = "<b>Fatalities - Injuries<b><br>" +"<i>Human-Cost of the Palestine-Israel Conflict (2000 - 2023)</i>"
-    #title= u"ضحايا الصراع الفلسطيني الإسرائيلي من 2000 حتى 2023"
-    #paths = ["E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\people.png",
-    #         "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\images\people.png"]
-    #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\TotalPie.html"
-    #piechart = PieChart(df, title, variables= [["Palestinians Killed","Israelis Killed"],["Palestinians Injuries","Israelis Injuries"]],
-    #                  legend_labels=["Palestinians", 'Israelis'], pie_labels=["Fatalities",'Injuries'], images_path=paths)
-    #piechart.show_plot(save_filename=save_filename)
-    #choice = Choice.Fatalities
-    #save_filename = "E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\outputs\FatalitiesPie.html"
-    #piechart = PieCharts(df, choice=choice)
-    #piechart.show_plot(save_filename=save_filename)
