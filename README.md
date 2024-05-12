@@ -26,7 +26,7 @@
 
 ## :dart: Introduction ##
 
-The "Human Cost of Palestine-Israel Conflict 2000 - 2023" is a data analytics project that aims to analyze the data of the conflict to help people understand the situation and read the conflict from a more insightful view. The conflict between Israel and Palestine dates back to the end of the nineteenth century, and it has claimed tens of thousands of lives and displaced many millions of people. The data source for this project is the United Nations (UN).
+The "Human Cost of Palestine-Israel Conflict 2000 - April 2024" is a data analytics project that aims to analyze the data of the conflict to help people understand the situation and read the conflict from a more insightful view. The conflict between Israel and Palestine dates back to the end of the nineteenth century, and it has claimed tens of thousands of lives and displaced many millions of people. The data source for this project is the United Nations (UN).
 
 The project includes multiple types of charts, such as heatmaps, bars, stacked bars, pie charts, histograms, and more. To create these visualizations, we used Python libraries such as Seaborn, Matplotlib, Bokeh, and Plotly. These libraries offer different features and strengths that make them suitable for different types of visualizations. For example, Seaborn is a Python plotting library built on top of Matplotlib that provides a higher-level API, making it easier to create more complex visualizations with less code. Bokeh and Plotly, on the other hand, are both open-source libraries that allow users to create interactive and dynamic visualizations.
 
@@ -39,8 +39,8 @@ In this project, we aim to provide a comprehensive analysis of the conflict and 
 :heavy_check_mark: Month : The month in which the conflict occurred or the data was collected;\
 :heavy_check_mark: Palestinian Injuries : The number of Palestinians who were injured as a result of the conflict;\
 :heavy_check_mark: Israelis Injuries : The number of Israelis who were injured as a result of the conflict;\
-:heavy_check_mark: Palestinian Killed : The number of Palestinians who were killed as a result of the conflict;\
-:heavy_check_mark: Israelis Killed : The number of Israelis who were killed as a result of the conflict;
+:heavy_check_mark: Palestinian Fatalities : The number of Palestinians who were killed as a result of the conflict;\
+:heavy_check_mark: Israelis Fatalities : The number of Israelis who were killed as a result of the conflict;
 
 ![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/987ce6ab131d8a4c6e05ed7bd243361dbb74ea25/outputs/Fheatmapgo.html?raw=true)
 
@@ -81,7 +81,7 @@ The analysis of the dataset revealed several key insights into the human cost of
 
 - Ratio of Palestinian to Israeli Casualties and Injuries: The ratio of Palestinian to Israeli casualties has ranged from 1.6:1 in 2000 to 14.7:1 in 2002. The ratio of Palestinian to Israeli injuries has ranged from 1.1:1 in 2000 to 4.7:1 in 2008.
 
-Overall, the "Human Cost of Palestine-Israel Conflict 2000 - 2023" project provides a comprehensive analysis of the conflict and its impact on human lives. The visualizations created in this project help people understand the situation and read the conflict from a more insightful view.
+Overall, the "Human Cost of Palestine-Israel Conflict 2000 - April 2024" project provides a comprehensive analysis of the conflict and its impact on human lives. The visualizations created in this project help people understand the situation and read the conflict from a more insightful view.
 
 ## :checkered_flag: Data Source ##
 
