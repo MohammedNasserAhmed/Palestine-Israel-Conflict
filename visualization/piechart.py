@@ -18,7 +18,7 @@ class PieChart:
     def __init__(self, df, title, variables: List[List[str]],
                  legend_labels: List[str], pie_labels: List[str],
                  images_path: List[str],
-                 colors : List[str]=['#088395','#E55604','#053B50']):
+                 colors : List[str]=["#820300",'#F4DFC8','#053B50']):
         if not isinstance(df, pd.DataFrame):
             raise TypeError("data must be a pandas DataFrame")
         if not isinstance(title, str):
@@ -240,7 +240,7 @@ class PieChart:
         
 
          
-class PieCharts:
+class PieChartM:
     def __init__(self, df, choice:Choice, title:str = None, colors : List[str]=['#088395','#E55604','#053B50']):
         """
         Initialize the class with the given parameters.

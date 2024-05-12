@@ -1,5 +1,5 @@
 loc: "upper center"
-bbox_to_anchor: [0.45, 0.91]
+bbox_to_anchor: [0.40, 0.92]
 fancybox: true
 ncol: 2
 labelspacing: 1.5
@@ -9,4 +9,4 @@ borderpad: 1
 frameon: true
 edgecolor: "black"
 facecolor: "white"
-fontsize: 15
+fontsize: 14

@@ -226,7 +226,7 @@ class StackBar:
 
 
 class vbar:
-    def __init__(self, df, var, y_label='Count', y_rotate=360, figwidth=15,
+    def __init__(self, df, var, y_label="Palestinians Fatalities", y_rotate=360, figwidth=15,
                  figheight=6, colors=None, legend_labels=None):
         """
         Initialize the class instance.
@@ -260,7 +260,7 @@ class vbar:
         self.df = df.copy()
         self.var = var
         self.y_label = y_label
-        if self.y_label.split()[1] == "Killed": 
+        if self.y_label.split()[1] == "Fatalities": 
             self.label = "Fatalities"
             self.title = f"{self.y_label.split()[0]} {self.label} / Year"
         else:
@@ -316,7 +316,7 @@ class vbar:
         fig.text(0.87, 0.96,f"Average of {self.y_label.split()[0]} {self.label} yearly : {round(average)}", 
                     color=self.colors[3], fontweight='bold', fontsize=fsize-6, 
                     va='center', ha="center")
-        fig.text(0.92,0.05,"aiNarabic.ai",
+        fig.text(0.92,0.05,"ainarabic.ai",
                     color="gray", fontsize=fsize-6, 
                     verticalalignment='top')
 
@@ -585,11 +585,11 @@ class CustomizedBar(BaseModel):
         # ====================== Title and signature =============================
 
         ax.text(0.14*axx, 95,self.title, verticalalignment='center',
-                fontsize=24,weight='bold', fontname='sans-serif', color="#001524")
-        ax.text(0.01*axx, 5,self.signature,alpha=0.5, verticalalignment='center',
-                fontsize=12, color="lightgray", fontstyle='italic')
-        ax.text(1.15*axx, 1,"DATA SOURCE by UN",alpha=0.5, verticalalignment='center',
-                fontsize=13, color="gray", fontstyle='italic')
+                fontsize=20,weight='bold', fontname='sans-serif', color="#001524")
+        ax.text(1.15*axx, 4,self.signature,alpha=0.9, verticalalignment='center',
+                fontsize=9, color="#CD8D7A", fontstyle='italic')
+        ax.text(1.15*axx, 1,"DATA SOURCE : UN",alpha=0.9, verticalalignment='center',
+                fontsize=8, color="#3559E0", fontstyle='italic')
         rect = patches.Rectangle((0.04*axx, 95), 0.03*axx, 5, linewidth=1,edgecolor="none", facecolor='black')
         ax.add_patch(rect)
         rect = patches.Rectangle((0.04*axx, 90), 0.03*axx, 5, linewidth=1, edgecolor="none", facecolor='green')
@@ -655,7 +655,10 @@ class CustomizedBar(BaseModel):
             logging.info("Plot shown")
             
             
-            
+
+                
+                
+                
 
 
  
