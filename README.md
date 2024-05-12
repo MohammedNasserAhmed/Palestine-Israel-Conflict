@@ -7,7 +7,7 @@
 </div>
 
 
-![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/b9fd387ec41be1fb23a69f7163dd40f0ae80c75a/outputs/customizedbar.png?raw=true)
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/849d1ce09128d4dd0f8e778983229c479de746ea/outputs/customizedbar.png?raw=true)
 
 
 <hr> -->
