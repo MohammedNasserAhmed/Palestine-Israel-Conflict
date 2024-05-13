@@ -237,7 +237,7 @@ class Histogram:
 
 
 
-class PXScatter:
+class Scatter:
     def __init__(self, df : pd.DataFrame, var : str):
         self.df = self.validate_df(df)
         self.var = self.validate_var(var, self.df)

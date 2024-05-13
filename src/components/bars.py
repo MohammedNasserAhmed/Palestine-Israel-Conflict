@@ -225,7 +225,7 @@ class StackBar:
         self.draw_chart(p, months, source, max_value, colors, theme=theme)
 
 
-class vbar:
+class Bar:
     def __init__(self, df, var, y_label="Palestinians Fatalities", y_rotate=360, figwidth=15,
                  figheight=6, colors=None, legend_labels=None):
         """
@@ -367,7 +367,7 @@ class vbar:
 
 
 
-class CustomizedBar(BaseModel):
+class CustomBar(BaseModel):
     data: List[dict] = Field(..., description="Input data should be a dictionary")
     title: str = Field(..., description="Title Input should be a string")
     box_title: str = Field(..., description="Left Box title input must be a string")

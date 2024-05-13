@@ -50,7 +50,7 @@ class Preprocessor:
         return grouped_data, column_names
 
 
-class HeatmapPlot:
+class Heatmap:
     def __init__(self, df, choice: Choice, cmap: str, library: str = 'sns'):
         self._df = None
         self._choice = None
