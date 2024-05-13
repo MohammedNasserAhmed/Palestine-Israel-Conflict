@@ -1,0 +1,12 @@
+loc: "upper center"
+bbox_to_anchor: [0.40, 0.92]
+fancybox: true
+ncol: 2
+labelspacing: 1.5
+framealpha: 1
+shadow: true
+borderpad: 1
+frameon: true
+edgecolor: "black"
+facecolor: "white"
+fontsize: 14

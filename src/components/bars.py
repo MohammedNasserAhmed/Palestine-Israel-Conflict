@@ -627,7 +627,7 @@ class CustomizedBar(BaseModel):
         markers = ['s', 's']
         markersize = 10  # Adjust the marker size as desired
         handles = [Line2D([0], [0], marker=marker, linestyle='None', color=color, markersize=markersize) for marker, color in zip(markers, bc)]
-        with open('legend_config.yaml', 'r') as file:
+        with open('/config/legend_config.yaml', 'r') as file:
             legend_config = yaml.safe_load(file)
         leg = ax.legend(handles, labels ,**legend_config)
         leg.get_frame().set_linewidth(0)
