@@ -8,13 +8,17 @@ from pandas.api.types import is_numeric_dtype
 import plotly.offline as py
 import itertools
 from enum import Enum
+import pandas as pd
+import  matplotlib.pyplot as plt
+import random
+from utils.func import make_autopct, reset_months
 
 class Choice(Enum):
     Injuries = "Injuries"
     Fatalities = "Fatalities"
 
 
-class PieChart:
+class PieChartYs:
     def __init__(self, df, title, variables: List[List[str]],
                  legend_labels: List[str], pie_labels: List[str],
                  images_path: List[str],
@@ -240,7 +244,7 @@ class PieChart:
         
 
          
-class PieChartM:
+class PieChartMs:
     def __init__(self, df, choice:Choice, title:str = None, colors : List[str]=['#088395','#E55604','#053B50']):
         """
         Initialize the class with the given parameters.
@@ -473,4 +477,105 @@ class PieChartM:
         Shows the figure.
         """
         fig.show()
+        
+        
+def pie_chart_mf(data, csv_features, Project_Path=None):
+    """
+    Create a pie chart based on the given data.
+
+    Parameters:
+    - data: The input data.
+    - feature: The feature to be plotted.
+    - colors: The colors for the pie chart.
+    - key: The key for grouping the data (optional).
+    - savefilename: The filename to save the chart as an image file (optional).
+
+    Returns:
+    None
+    """
+   
+    monthly_data = data.drop('Year', axis=1).groupby('Month').sum().sort_index(ascending=False)
+    monthly_data = reset_months(monthly_data)
+    
+   
+    colors = ['#92C7CF','#AAD7D9','#FBF9F1','#E5E1DA','#DBA979','#ECCA9C','#E8EFCF','#AFD198',
+            '#FF407D','#FFCAD4','#FEC7B4','#FC819E','#FFCF96','#F6FDC3','#CDFAD5','#F2AFEF','#C499F3']
+    for feature in csv_features:
+        values = monthly_data[feature].values
+        
+        i = random.randint(12, 18)
+        j = i - 12
+        
+        fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(aspect='equal'))
+        wedge_properties = {'linewidth': 1, 'edgecolor': 'white'}
+        ax.pie(values, labels=monthly_data.index, colors=colors[j:i], autopct=make_autopct(values), labeldistance=0.8, pctdistance=1.15, shadow=True,
+            counterclock=True, wedgeprops=wedge_properties, rotatelabels=True,
+            textprops={'fontsize': 7})
+
+        plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.95)
+        center_circle = plt.Circle((0, 0), 0.5, fc='white')
+        fig.gca().add_artist(center_circle)
+        fig.suptitle(f'{feature} per Months (2000- April 2024)')
+
+        # Save the chart as an image file
+        if Project_Path is not None:
+            savefilename = Project_Path+f'\outputs\{feature.replace(" ", "_")}_per_months.png'
+            plt.savefig(savefilename, bbox_inches='tight')
+
+        plt.show()
+    
+def pie_chart_sf(data, csv_features, Project_Path=None):
+    """
+    Create a pie chart based on the given data.
+
+    Parameters:
+    - data: The input data.
+    - feature: The feature to be plotted.
+    - colors: The colors for the pie chart.
+    - key: The key for grouping the data (optional).
+    - savefilename: The filename to save the chart as an image file (optional).
+
+    Returns:
+    None
+    """
+    
+
+    # Create a pie chart
+   
+    season_map = {
+        'JANUARY': 'Winter', 'FEBRUARY': 'Winter', 'MARCH': 'Spring', 'APRIL': 'Spring',
+        'MAY': 'Spring', 'JUNE': 'Summer', 'JULY': 'Summer', 'AUGUST': 'Summer',
+        'SEPTEMBER': 'Autumn', 'OCTOBER': 'Autumn', 'NOVEMBER': 'Autumn', 'DECEMBER': 'Winter'
+    }
+    
+    # Add a 'Season' column to the DataFrame
+    data['Season'] = data['Month'].map(season_map)
+    columns = ['Year', 'Season', 'Month', "Palestinians Fatalities","Israelis Fatalities","Palestinians Injuries","Israelis Injuries"]
+    data = data[columns]
+    seasonly_data = data.drop(['Year','Month'], axis=1).groupby('Season').sum().sort_index(ascending=False)
+   
+    colors = ['#92C7CF','#AAD7D9','#FBF9F1','#E5E1DA','#DBA979','#ECCA9C','#E8EFCF','#AFD198',
+            '#FF407D','#FFCAD4','#FEC7B4','#FC819E','#FFCF96','#F6FDC3','#CDFAD5','#F2AFEF','#C499F3']
+    for feature in csv_features:
+        values = seasonly_data[feature].values
+        i = random.randint(4, 13)
+        j = i - 4
+        
+        fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(aspect='equal'))
+        wedge_properties = {'linewidth': 1, 'edgecolor': 'white'}
+        ax.pie(values, labels=seasonly_data.index, colors=colors[j:i], autopct=make_autopct(values), labeldistance=0.6, pctdistance=1.15, shadow=True,
+            counterclock=True, wedgeprops=wedge_properties, rotatelabels=True,
+            textprops={'fontsize': 7})
+
+        plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.95)
+        center_circle = plt.Circle((0, 0), 0.5, fc='white')
+        fig.gca().add_artist(center_circle)
+        fig.suptitle(f'{feature} per seasons (2000- April 2024)')
+
+        # Save the chart as an image file
+        if Project_Path is not None:
+            savefilename = Project_Path+f'\outputs\{feature.replace(" ", "_")}_per_seasons.png'
+            plt.savefig(savefilename, bbox_inches='tight')
+
+        plt.show()
 
