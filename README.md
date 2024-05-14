@@ -119,7 +119,7 @@ Overall, the "Human Cost of Palestine-Israel Conflict 2000 - April 2024" project
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
 
-Made with :heart: by <a href="https://github.com/MohammedNasserAhmed" target="_blank">M. N. Gaber</a>
+Made with 😞: by <a href="https://github.com/MohammedNasserAhmed" target="_blank">M. N. Gaber</a>
 
 &#xa0;
 
