@@ -1,7 +1,7 @@
 import logging
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure, output_file
-from bokeh.io import curdoc, show
+from bokeh.io import curdoc, show, output_notebook
 from bokeh.palettes import  Cividis256
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -136,7 +136,7 @@ class StackBar:
         """
         renderers = p.vbar_stack(months, x='years', width=0.7, color=colors, source=source,
                                       legend_label=months, name=months)
-
+        
         for r in renderers:
             hover = HoverTool(tooltips=[
                 ("Month", "$name"),
@@ -191,6 +191,7 @@ class StackBar:
         p.yaxis.axis_line_width=1
         if self.save_filename is not None:
             output_file(self.save_filename)
+        output_notebook()
         curdoc().theme = theme
         show(p)
        
@@ -627,7 +628,7 @@ class CustomBar(BaseModel):
         markers = ['s', 's']
         markersize = 10  # Adjust the marker size as desired
         handles = [Line2D([0], [0], marker=marker, linestyle='None', color=color, markersize=markersize) for marker, color in zip(markers, bc)]
-        with open('/config/legend_config.yaml', 'r') as file:
+        with open('E:\MyOnlineCourses\ML_Projects\Palestine-Israel-Conflict\config\legend_config.yaml', 'r') as file:
             legend_config = yaml.safe_load(file)
         leg = ax.legend(handles, labels ,**legend_config)
         leg.get_frame().set_linewidth(0)
