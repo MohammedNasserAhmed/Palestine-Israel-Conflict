@@ -61,10 +61,37 @@ In summary, the methodology used in this project involved several steps, includi
 
 The visualizations created in this project provide a comprehensive view of the conflict and its impact on human lives. Some of the visualizations created include:
 * Heatmaps
-* Bar charts 
-* Stacked bar charts 
+
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/Fheatmapgo.png?raw=true)
+  
+* Bar charts
+
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/ps_i_yearbar.png?raw=true)
+  
+  
+* Stacked bar charts
+
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/stackedbar.png?raw=true)
+
+
 * Pie charts
+
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/TotalPie.png?raw=true)
+
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/InjuriesPie.png?raw=true)
+
+![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/Palestinians_Fatalities_per_Months.png?raw=true)
+
+
 * Scatter charts
+
+  ![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/Scatter_il_i.png?raw=true)
+
+  ![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/Bubbles.png?raw=true)
+
+* Histograms
+
+   ![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/histogramF.png?raw=true)
   
 ## :checkered_flag: Insights ##
 
@@ -92,7 +119,7 @@ Overall, the "Human Cost of Palestine-Israel Conflict 2000 - April 2024" project
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
 
-Made with :heart: by <a href="https://github.com/MohammedNasserAhmed" target="_blank">M. N. Gaber</a>
+Made with 😞: by <a href="https://github.com/MohammedNasserAhmed" target="_blank">M. N. Gaber</a>
 
 &#xa0;
 
