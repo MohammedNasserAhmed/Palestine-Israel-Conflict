@@ -9,4 +9,4 @@ borderpad: 1
 frameon: true
 edgecolor: "black"
 facecolor: "white"
-fontsize: 14
+fontsize: 10

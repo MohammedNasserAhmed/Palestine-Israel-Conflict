@@ -170,5 +170,3 @@ class DataFrameCopier:
         """
         return f"DataFrameCopier(df={self.df})"
     
-loader = Loader()
-loader.get_dataset_name("E:\MyOnlineCourses\ML_Projects\palestine_israel_conflict\data\ps_il.csv")

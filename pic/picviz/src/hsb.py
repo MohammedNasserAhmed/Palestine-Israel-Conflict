@@ -7,7 +7,6 @@ import time
 import plotly.express as px
 from typing import List 
 import logging
-from itertools import combinations
 
 class Config:
     """
@@ -230,9 +229,10 @@ class Histogram:
         if save_filename is not None and isinstance(save_filename, str) and save_filename.endswith(".html"):
             try:
                 fig.write_html(save_filename)
-                fig.show()
+                
             except Exception as e:
                 return f"Error saving plot as HTML: {str(e)}"
+        fig.show()
         
 
 

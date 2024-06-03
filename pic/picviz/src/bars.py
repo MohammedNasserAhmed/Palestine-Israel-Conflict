@@ -13,7 +13,7 @@ from typing import List, Tuple
 from pydantic import BaseModel, Field, validator
 from matplotlib.lines import Line2D
 import yaml
-
+from pathlib import Path
 
 
 class StackBar:
@@ -227,7 +227,7 @@ class StackBar:
 
 
 class Bar:
-    def __init__(self, df, var, y_label="Palestinians Fatalities", y_rotate=360, figwidth=15,
+    def __init__(self, df, var = "Year", y_label="Palestinians Fatalities", y_rotate=90, figwidth=15,
                  figheight=6, colors=None, legend_labels=None):
         """
         Initialize the class instance.
@@ -343,7 +343,6 @@ class Bar:
         leg.get_frame().set_linewidth(0)
 
     def add_arrows(self, fig, fsize):
-        fc = "#FFFAF0"
         ec= "none"
         txt = "     "
         bbox_props_shadows = dict(boxstyle="rarrow", fc=self.colors[2], ec=ec, lw=1,
@@ -369,24 +368,28 @@ class Bar:
 
 
 class CustomBar(BaseModel):
-    data: List[dict] = Field(..., description="Input data should be a dictionary")
+    data: pd.DataFrame = Field(..., description="Input data should be a dataframe")
     title: str = Field(..., description="Title Input should be a string")
-    box_title: str = Field(..., description="Left Box title input must be a string")
-    gv: str = Field(..., description="The variable to group data should be in a string dtype")
-    cols: List[Tuple[str,str]] = Field(..., description="Columns should be a list of tuples")
-    img_lbls: List[Tuple[str,str]] = Field(..., description="Images labels should be a list with a single tuple")
-    lgd_lbls: List[Tuple[str,str]] = Field(..., description="Legend labels should be a list with a single tuple")
-    img_paths: List[str] = Field(..., description="Images paths should be a list of exactly four paths")
-    map_img: str = Field(..., description="Map Image path input must be a string")
-    signature: str = Field(..., description="Signature input must be a string")
+    box_title: str = Field("TOTAL fatalities and injuries\n           2000 - 2024", description="Left Box title input must be a string")
+    gv: str = Field("Year", description="The variable to group data should be in a string dtype")
+    cols: List[Tuple[str,str]] = Field([("Palestinians Injuries","Palestinians Fatalities"),("Israelis Injuries","Israelis Fatalities")], description="Columns should be a list of tuples")
+    img_lbls: List[Tuple[str,str]] = Field( [("Palestinians","Israelis")], description="Images labels should be a list with a single tuple")
+    lgd_lbls: List[Tuple[str,str]] = Field( [("Injuries","Fatalities")], description="Legend labels should be a list with a single tuple")
+    img_paths: List[str] = Field([Path("pic\picviz\images\ps_h.png"),Path("pic\picviz\images\il_h.png"),
+                                  Path("pic\picviz\images\ps_h.png"),Path("pic\picviz\images\il_h.png")], 
+                                  description="Images paths should be a list of exactly four paths")
+    map_img: str = Field(Path("pic\picviz\images\pmap.png"), description="Map Image path input must be a string")
+    
+    legend_config_path: str = Field(Path(r"pic\picviz\utils\legend_config.yaml"), description="Path to legend config yaml")
     
     @validator('data')
     def validate_dataframe(cls, data):
-        if not isinstance(data, list):
-            raise ValueError(f'Input data should be a list of dictionaries. Got {type(data).__name__} instead.')
-        return data
+         if not isinstance(data, pd.DataFrame):
+             raise ValueError(f'Input data should be a list of dictionaries. Got {type(data).__name__} instead.')
+         return data.to_dict(orient='records')
     
     class Config:
+        arbitrary_types_allowed = True
         schema_extra = {
             "example": {
                 "dataframe": [
@@ -405,7 +408,8 @@ class CustomBar(BaseModel):
                 "legend_lbls": [("Legend Label1", "Legend Label2")],
                 "img_paths": ["path1", "path2", "path3", "path4"],
                 "map_img": "Map Image",
-                "signature": "Signature"
+                "legend_config_path":"Legend Config Yaml"
+                
             }
         }
     def clean_data(self):
@@ -587,7 +591,7 @@ class CustomBar(BaseModel):
 
         ax.text(0.14*axx, 95,self.title, verticalalignment='center',
                 fontsize=20,weight='bold', fontname='sans-serif', color="#001524")
-        ax.text(1.15*axx, 4,self.signature,alpha=0.9, verticalalignment='center',
+        ax.text(1.15*axx, 4,"ainarabic.ai",alpha=0.9, verticalalignment='center',
                 fontsize=9, color="#CD8D7A", fontstyle='italic')
         ax.text(1.15*axx, 1,"DATA SOURCE : UN",alpha=0.9, verticalalignment='center',
                 fontsize=8, color="#3559E0", fontstyle='italic')
@@ -626,9 +630,9 @@ class CustomBar(BaseModel):
         bc = ["#CD1818", "#3D0C11"]
         labels = [self.lgd_lbls[0][0], self.lgd_lbls[0][1]]
         markers = ['s', 's']
-        markersize = 10  # Adjust the marker size as desired
+        markersize = 10 
         handles = [Line2D([0], [0], marker=marker, linestyle='None', color=color, markersize=markersize) for marker, color in zip(markers, bc)]
-        with open('E:\MyOnlineCourses\ML_Projects\Palestine-Israel-Conflict\config\legend_config.yaml', 'r') as file:
+        with open(self.legend_config_path, 'r') as file:
             legend_config = yaml.safe_load(file)
         leg = ax.legend(handles, labels ,**legend_config)
         leg.get_frame().set_linewidth(0)
@@ -655,9 +659,8 @@ class CustomBar(BaseModel):
         else:
             logging.info("Plot shown")
             
-            
-
-                
+  
+          
                 
                 
 

@@ -1,55 +1,78 @@
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
-from typing import Dict, List
+from typing import List
 import pandas as pd
 from PIL import Image
-from pandas.api.types import is_numeric_dtype
 import plotly.offline as py
 import itertools
 from enum import Enum
 import pandas as pd
 import  matplotlib.pyplot as plt
 import random
-from utils.func import make_autopct, reset_months
-
+from pathlib import Path
 class Choice(Enum):
     Injuries = "Injuries"
     Fatalities = "Fatalities"
 
 
+def make_autopct(values):
+    """
+    Generate the autopct function for a pie chart.
+
+    Parameters:
+    - values: The values for the pie chart.
+
+    Returns:
+    The autopct function.
+    """
+    total = sum(values)
+    def my_autopct(pct):
+        val = int(round(pct * total / 100.0))
+        return f'{val} ({pct:.0f}%)'
+    return my_autopct
+
+
+
+def reset_months(data):
+    """
+    Rename the index of the given DataFrame 'data' with month abbreviations.
+
+    Args:
+        data (pd.DataFrame): The DataFrame to be renamed.
+
+    Returns:
+        pd.DataFrame: The DataFrame with renamed index.
+    """
+    try:
+        if isinstance(data, pd.DataFrame):
+            months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER']
+            data = data.reindex(index=months)
+            month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            rename_dict = {data.index[i]: month_names[i] for i in range(len(data.index))}
+            data = data.rename(index=rename_dict)
+    except Exception as e:
+        print(f'Error occurred during renaming process: {e}')
+
+    return data
 class PieChartYs:
-    def __init__(self, df, title, variables: List[List[str]],
-                 legend_labels: List[str], pie_labels: List[str],
-                 images_path: List[str],
+    def __init__(self, df, title,
                  colors : List[str]=["#820300",'#F4DFC8','#053B50']):
         if not isinstance(df, pd.DataFrame):
             raise TypeError("data must be a pandas DataFrame")
         if not isinstance(title, str):
             raise TypeError("title must be a string")
-        if not isinstance(variables, list) or not all(isinstance(pair, list) and len(pair) == 2 for pair in variables):
-            raise TypeError("variables must be a list of lists, each with two elements")
-        if not isinstance(legend_labels, list) or len(legend_labels) != len(variables):
-            raise TypeError("legend labels must be a list, and in same length of variables")
-        if not isinstance(pie_labels, list) or len(pie_labels) != len(variables):
-            raise TypeError("pie labels must be a list, and in same length of variables")
-        if not isinstance(images_path, list) or len(images_path) != len(variables):
-            raise TypeError("pie labels must be a list, and in same length of variables")
+        
+        
 
-        lst=[]
-        for sublist in variables:
-            for val in sublist:
-                if val not in df.columns:
-                    raise ValueError(f"{val} is not a column in the DataFrame")
-                if not is_numeric_dtype(df[val]):
-                    raise ValueError(f"df[{val}] must be a numerical column")
-                lst.append(val)
+ 
         self.df = df
         self.title = title
-        self.vars = variables
-        self.legend_labels=legend_labels
-        self.pie_labels=pie_labels
-        self.paths=images_path
+        self.vars = [["Palestinians Fatalities","Israelis Fatalities"],
+                     ["Palestinians Injuries","Israelis Injuries"]]
+        self.legend_labels=["Palestinians", 'Israelis']
+        self.pie_labels=["Fatalities","Injuries"]
+        self.paths=[Path("pic\picviz\images\people.png"),Path("pic\picviz\images\people.png")]
         self.colors = colors
 
 
@@ -479,13 +502,12 @@ class PieChartMs:
         fig.show()
         
         
-def pie_chart_mf(data, csv_features, Project_Path=None):
+def pie_chart_mf(data, Project_Path=None):
     """
     Create a pie chart based on the given data.
 
     Parameters:
     - data: The input data.
-    - feature: The feature to be plotted.
     - colors: The colors for the pie chart.
     - key: The key for grouping the data (optional).
     - savefilename: The filename to save the chart as an image file (optional).
@@ -493,7 +515,7 @@ def pie_chart_mf(data, csv_features, Project_Path=None):
     Returns:
     None
     """
-   
+    csv_features = ["Palestinians Fatalities","Israelis Fatalities","Palestinians Injuries","Israelis Injuries"]
     monthly_data = data.drop('Year', axis=1).groupby('Month').sum().sort_index(ascending=False)
     monthly_data = reset_months(monthly_data)
     
@@ -524,7 +546,7 @@ def pie_chart_mf(data, csv_features, Project_Path=None):
 
         plt.show()
     
-def pie_chart_sf(data, csv_features, Project_Path=None):
+def pie_chart_sf(data, Project_Path=None):
     """
     Create a pie chart based on the given data.
 
@@ -541,7 +563,7 @@ def pie_chart_sf(data, csv_features, Project_Path=None):
     
 
     # Create a pie chart
-   
+    csv_features = ["Palestinians Fatalities","Israelis Fatalities","Palestinians Injuries","Israelis Injuries"]
     season_map = {
         'JANUARY': 'Winter', 'FEBRUARY': 'Winter', 'MARCH': 'Spring', 'APRIL': 'Spring',
         'MAY': 'Spring', 'JUNE': 'Summer', 'JULY': 'Summer', 'AUGUST': 'Summer',
@@ -579,3 +601,6 @@ def pie_chart_sf(data, csv_features, Project_Path=None):
 
         plt.show()
 
+
+
+   
