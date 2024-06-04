@@ -239,19 +239,9 @@ class Histogram:
 
 class Scatter:
     def __init__(self, df : pd.DataFrame, var : str):
-        self.df = self.validate_df(df)
+        self.df = df
         self.var = self.validate_var(var, self.df)
         self.config = Config()
-
-    @staticmethod
-    def validate_df(df):
-        if not isinstance(df, list):
-            raise ValueError('df must be a dictionary')
-        for item in df:
-            if not isinstance(item, dict):
-                raise ValueError('Each item in df must be a dictionary')
-        df = pd.DataFrame(df)
-        return df
 
     @staticmethod
     def validate_var(var, df):
@@ -262,18 +252,18 @@ class Scatter:
         return var
 
     
-    def log_execution_time(func):
-        def wrapper(*args, **kwargs):
-            logging.info(f'Starting to execute {func.__name__}')
-            start_time = time.time()
-            result = func(*args, **kwargs)
-            end_time = time.time()
-            execution_time = end_time - start_time
-            logging.info(f'Finished executing {func.__name__} in {execution_time} seconds')
-            return result
-        return wrapper
+    # def log_execution_time(func):
+    #     def wrapper(*args, **kwargs):
+    #         logging.info(f'Starting to execute {func.__name__}')
+    #         start_time = time.time()
+    #         result = func(*args, **kwargs)
+    #         end_time = time.time()
+    #         execution_time = end_time - start_time
+    #         logging.info(f'Finished executing {func.__name__} in {execution_time} seconds')
+    #         return result
+    #     return wrapper
 
-    @log_execution_time
+    #@log_execution_time
     def show(self, save_filename: str = None):
         """_summary_
 
@@ -284,7 +274,6 @@ class Scatter:
         """
         yearstxt = "2000 2005 2010 2015 2020 2024"
         try:
-            logging.info('Starting to plot scatter')
             if self.var.split()[1] == "Killed":
                 label = f"{self.var.split()[0]} Fatalities"
             else :
@@ -377,11 +366,9 @@ class Scatter:
             if  save_filename is not None :
                 fig.write_html(save_filename)
             fig.show()
-
-            logging.info('Finished plotting scatter')
+            
         except Exception as e:
-            logging.error(f'Error plotting scatter: {str(e)}')
-            raise
+            raise e
 
 
 class Bubbles:

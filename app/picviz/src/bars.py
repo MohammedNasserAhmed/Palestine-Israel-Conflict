@@ -375,12 +375,12 @@ class CustomBar(BaseModel):
     cols: List[Tuple[str,str]] = Field([("Palestinians Injuries","Palestinians Fatalities"),("Israelis Injuries","Israelis Fatalities")], description="Columns should be a list of tuples")
     img_lbls: List[Tuple[str,str]] = Field( [("Palestinians","Israelis")], description="Images labels should be a list with a single tuple")
     lgd_lbls: List[Tuple[str,str]] = Field( [("Injuries","Fatalities")], description="Legend labels should be a list with a single tuple")
-    img_paths: List[str] = Field([Path("pic\picviz\images\ps_h.png"),Path("pic\picviz\images\il_h.png"),
-                                  Path("pic\picviz\images\ps_h.png"),Path("pic\picviz\images\il_h.png")], 
+    img_paths: List[str] = Field([Path("app\picviz\images\ps_h.png"),Path("app\picviz\images\il_h.png"),
+                                  Path("app\picviz\images\ps_h.png"),Path("app\picviz\images\il_h.png")], 
                                   description="Images paths should be a list of exactly four paths")
-    map_img: str = Field(Path("pic\picviz\images\pmap.png"), description="Map Image path input must be a string")
+    map_img: str = Field(Path("app\picviz\images\pmap.png"), description="Map Image path input must be a string")
     
-    legend_config_path: str = Field(Path(r"pic\picviz\utils\legend_config.yaml"), description="Path to legend config yaml")
+    legend_config_path: str = Field(Path(r"app\picviz\utils\legend_config.yaml"), description="Path to legend config yaml")
     
     @validator('data')
     def validate_dataframe(cls, data):

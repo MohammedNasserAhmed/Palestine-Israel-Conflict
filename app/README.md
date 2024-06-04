@@ -55,7 +55,6 @@ Delve into the intricate dynamics of the Palestine-Israel conflict with my GitHu
 
 The following tools were used in this project:
 
-- [Expo](https://expo.io/)
 - [Python](https://nodejs.org/)
 
 ## :white_check_mark: Requirements

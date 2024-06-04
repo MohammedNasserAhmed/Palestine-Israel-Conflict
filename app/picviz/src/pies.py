@@ -72,7 +72,7 @@ class PieChartYs:
                      ["Palestinians Injuries","Israelis Injuries"]]
         self.legend_labels=["Palestinians", 'Israelis']
         self.pie_labels=["Fatalities","Injuries"]
-        self.paths=[Path("pic\picviz\images\people.png"),Path("pic\picviz\images\people.png")]
+        self.paths=[Path("app\picviz\images\people.png"),Path("app\picviz\images\people.png")]
         self.colors = colors
 
 

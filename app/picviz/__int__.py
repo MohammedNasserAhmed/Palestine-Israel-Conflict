@@ -1,24 +1,25 @@
 from .src.bars import(
     CustomBar,
     Bar,
-    StackBar,
+    StackBar
 )
 from .src.heatmap import(
     Heatmap,
+    Choice
 )
 from .src.hsb import(
     Bubbles,
     Scatter,
-    Histogram,
+    Histogram
 )
 from .src.pies import(
     PieChartYs,
     PieChartMs,
     pie_chart_mf,
     pie_chart_sf,
-    Choice,
+    Choice
     
 )
 from .utils.data import(
-    Loader,
+    Loader
 )
