@@ -1,7 +1,6 @@
-<div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="Palestine-Israel-Conflict" />
+# Palestine-Israel-Conflict | Statistical Analysis 
 
-  &#xa0;
+ 
 
   <!-- <a href="https://Palestine-Israel-Conflict.netlify.app">Demo</a> -->
 </div>
@@ -24,7 +23,7 @@
 
 <br>
 
-## :dart: Introduction ##
+## :dart: Introduction 
 
 The "Human Cost of Palestine-Israel Conflict 2000 - April 2024" is a data analytics project that aims to analyze the data of the conflict to help people understand the situation and read the conflict from a more insightful view. The conflict between Israel and Palestine dates back to the end of the nineteenth century, and it has claimed tens of thousands of lives and displaced many millions of people. The data source for this project is the United Nations (UN).
 
@@ -33,7 +32,7 @@ The project includes multiple types of charts, such as heatmaps, bars, stacked b
 The dataset used in this project has only four columns and features: Year, Month, Palestinians Killed, Israelis Killed, Palestinians Injuries, and Israelis Injuries. The dataset has no details about children or women.
 In this project, we aim to provide a comprehensive analysis of the conflict and its impact on human lives. The following sections of this README file will provide more details about the project, including the methodology used, the visualizations created, and the insights gained from the analysis.
 
-## :sparkles: Dataset Features ##
+## :sparkles: Dataset Features 
 
 :heavy_check_mark: Year : The year in which the conflict occurred or the data was collected.;\
 :heavy_check_mark: Month : The month in which the conflict occurred or the data was collected;\
@@ -44,7 +43,7 @@ In this project, we aim to provide a comprehensive analysis of the conflict and 
 
 ![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/987ce6ab131d8a4c6e05ed7bd243361dbb74ea25/outputs/Fheatmapgo.html?raw=true)
 
-## :rocket: Methodology ##
+## :rocket: Methodology 
 
 The methodology used in this project involved several steps to ensure that the data was properly analyzed and visualized :
 
@@ -57,7 +56,7 @@ After preprocessing, we used Python libraries such as Seaborn, Matplotlib, Bokeh
 
 In summary, the methodology used in this project involved several steps, including data preprocessing, visualization, and analysis. We used Python libraries such as Pandas, Seaborn, Matplotlib, Bokeh, and Plotly to effectively analyze and visualize the data.
 
-## :white_check_mark: Visualizations ##
+## :white_check_mark: Visualizations 
 
 The visualizations created in this project provide a comprehensive view of the conflict and its impact on human lives. Some of the visualizations created include:
 * Heatmaps
@@ -93,28 +92,16 @@ The visualizations created in this project provide a comprehensive view of the c
 
    ![](https://github.com/MohammedNasserAhmed/Palestine-Israel-Conflict/blob/f14da1c43b1d722fdaee4043e231c17a87fdedb0/outputs/histogramF.png?raw=true)
   
-## :checkered_flag: Insights ##
+## :checkered_flag: Insights 
 
 The analysis of the dataset revealed several key insights into the human cost of the Palestine-Israel conflict:
 
-### **_Injuries and Fatalities_**
 
-- Highest and Lowest Years: The year with the highest number of Palestinian fatalities was 2023, with 12027 deaths, while the year with the lowest number of Palestinian fatalities was 2020, with 30 deaths. The year with the highest number of Israeli fatalities was 2023, with 1429 deaths, while the year with the lowest number of Israeli fatalities was 2020, with 3 deaths.
-
-- Highest and Lowest Months: The month with the highest number of Palestinian fatalities was October, with an average of 1049 deaths per month, while the month with the lowest number of Palestinian fatalities was June, with an average of 37 deaths per month. The month with the highest number of Israeli fatalities was October, with an average of 126 deaths per month, while the month with the lowest number of Israeli fatalities was September, with an average of 6 deaths per month.
-
-- Total Injuries per Year: The total number of Palestinian injuries per year has ranged from 1,107 in 2000 to 4,690 in 2008. The total number of Israeli injuries per year has ranged from 1,054 in 2000 to 2,670 in 2005.
-
-
-- Ratio of Palestinian to Israeli Casualties and Injuries: The ratio of Palestinian to Israeli casualties has ranged from 1.6:1 in 2000 to 14.7:1 in 2002. The ratio of Palestinian to Israeli injuries has ranged from 1.1:1 in 2000 to 4.7:1 in 2008.
-
-Overall, the "Human Cost of Palestine-Israel Conflict 2000 - April 2024" project provides a comprehensive analysis of the conflict and its impact on human lives. The visualizations created in this project help people understand the situation and read the conflict from a more insightful view.
-
-## :checkered_flag: Data Source ##
+## :checkered_flag: Data Source 
 
 <a href="https://www.ochaopt.org/data/casualties" target="_blank">OCHA</a>
 
-## :memo: License ##
+## :memo: License 
 
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
